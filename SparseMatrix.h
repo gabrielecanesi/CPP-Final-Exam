@@ -1,5 +1,6 @@
 #ifndef SPARSE_MATRIX_H
 #define SPARSE_MATRIX_H
+#include "matrix_bounds_exception.h"
 
 /**
  *
@@ -22,7 +23,7 @@
 template<typename T>
 class SparseMatrix {
 private:
-    struct Node;
+    struct node;
 public:
 
     typedef unsigned long size_type;
@@ -145,7 +146,7 @@ public:
      * @post m_default == other.m_default
      */
     SparseMatrix(const SparseMatrix& other) : m_height(other.m_height), m_width(other.m_width), m_data(nullptr), m_default(other.m_default){
-        Node* temp = other.m_data;
+        node* temp = other.m_data;
 
         // Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria.
         try{
@@ -192,11 +193,11 @@ public:
      */
     void set(size_type i, size_type j, const T& data){
         if(i > m_height || j > m_width || i < 0 || j < 0){
-            return;
+            throw matrix_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
         }
-        Node *found = get_node(i, j);
+        node *found = get_node(i, j);
         if(found == nullptr){
-            Node *new_node = new Node(i, j, data);
+            node *new_node = new node(i, j, data);
             new_node->next = m_data;
             m_data = new_node;
         }
@@ -214,10 +215,10 @@ public:
 
     T& operator()(size_type i, size_type j) {
         if (i >= m_height || j >= m_width || i < 0 || j < 0){
-            return m_default;
+            throw matrix_bounds_exception("Gli indici specificati non rientrano nei limiti di dimensione della matrice.");
         }
 
-        Node *found = get_node(i, j);
+        node *found = get_node(i, j);
         if(found == nullptr){
             return m_default;
         }
@@ -290,14 +291,14 @@ public:
     private:
         //Dati membro
 
-        const Node *ptr;
+        const node *ptr;
         // La classe container deve essere messa friend dell'iteratore per poter
         // usare il costruttore di inizializzazione.
         friend class SparseMatrix;
 
         // Costruttore privato di inizializzazione usato dalla classe container
         // tipicamente nei metodi begin e end
-        explicit const_iterator(const Node* ptr) : ptr(ptr) {}
+        explicit const_iterator(const node* ptr) : ptr(ptr) {}
 
         // !!! Eventuali altri metodi privati
 
@@ -323,29 +324,27 @@ public:
 private:
 
     // Struttura che implementa il nodo della lista.
-    struct Node{
+    struct node{
         element data;
-        Node *next;
+        node *next;
 
         // Costruttore di default
-        Node() : next(nullptr){}
+        node() : next(nullptr){}
 
         // Costruttore di copia
-        Node(const Node& other){
-            data = other.data;
-            next = other.next;
-        }
+        node(const node& other) : data(other.data), next(other.next) {}
 
         // Costruttore che prende in input gli indici e il dato da inserire.
-        Node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(nullptr){}
+        node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(nullptr){}
 
-        // Distruttore. è vuoto perchè la distruzione viene gestita dalla classe SparseMatrix ed è visibile solo ad essa.
-        ~Node(){}
+        // Distruttore. è vuoto perchè la distruzione viene gestita dalla classe SparseMatrix e
+        // non è accessibile dall'esterno..
+        ~node(){}
 
         // Operatore di assegnamento.
-        Node& operator=(const Node& other){
+        node& operator=(const node& other){
             if (this != &other){
-                Node temp = other;
+                node temp = other;
                 data = other.data;
                 next = temp.next;
             }
@@ -355,7 +354,7 @@ private:
 
 
     // La matrice vera e propria
-    Node *m_data;
+    node *m_data;
 
     // Gli attributi che memorizzano larghezza e altezza della matrice
     size_type m_width;
@@ -365,8 +364,8 @@ private:
     T m_default;
 
     // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) se esiste, nullptr altrimenti
-    Node* get_node(size_type i, size_type j){
-        Node* temp = m_data;
+    node* get_node(size_type i, size_type j){
+        node* temp = m_data;
         while (temp != nullptr && temp->data.m_i != i && temp->data.m_j != j){
             temp = temp->next;
         }
@@ -374,9 +373,9 @@ private:
     }
 
     void distruggi_matrice(){
-        Node* it = m_data;
+        node* it = m_data;
         while (it != nullptr){
-            Node* temp = it;
+            node* temp = it;
             it = it->next;
             delete temp;
         }
