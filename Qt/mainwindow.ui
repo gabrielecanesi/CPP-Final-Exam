@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>730</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Editor Bello</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -38,51 +38,66 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTextEdit" name="editor_testo">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>800</width>
-      <height>600</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
     </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-      <horstretch>100</horstretch>
-      <verstretch>100</verstretch>
-     </sizepolicy>
+    <property name="topMargin">
+     <number>0</number>
     </property>
-    <property name="minimumSize">
-     <size>
-      <width>100</width>
-      <height>100</height>
-     </size>
+    <property name="rightMargin">
+     <number>0</number>
     </property>
-    <property name="maximumSize">
-     <size>
-      <width>100000</width>
-      <height>100000</height>
-     </size>
+    <property name="bottomMargin">
+     <number>0</number>
     </property>
-    <property name="layoutDirection">
-     <enum>Qt::LeftToRight</enum>
+    <property name="spacing">
+     <number>0</number>
     </property>
-   </widget>
+    <item row="0" column="0">
+     <widget class="QTextEdit" name="editor_testo">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>100</horstretch>
+        <verstretch>100</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>999999</width>
+        <height>999999</height>
+       </size>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>22</height>
+     <width>730</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNuovo"/>
     <addaction name="actionApri"/>
     <addaction name="separator"/>
     <addaction name="actionSalva"/>
@@ -97,25 +112,44 @@
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionApri">
    <property name="text">
     <string>Apri</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+A</string>
    </property>
   </action>
   <action name="actionSalva">
    <property name="text">
     <string>Salva</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+S</string>
+   </property>
   </action>
   <action name="actionSalva_con_nome">
    <property name="text">
     <string>Salva con nome...</string>
    </property>
+   <property name="shortcut">
+    <string>Meta+Shift+S</string>
+   </property>
   </action>
   <action name="actionCerca">
    <property name="text">
     <string>Cerca...</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+F</string>
+   </property>
+  </action>
+  <action name="actionNuovo">
+   <property name="text">
+    <string>Nuovo</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+N</string>
    </property>
   </action>
  </widget>

@@ -1,7 +1,8 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "finddialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,9 +23,15 @@ private slots:
 
     void on_actionSalva_con_nome_triggered();
 
+    void on_actionCerca_triggered();
+
+    void on_actionNuovo_triggered();
+
 private:
     QString open_file_name;
-    void resizeEvent(QResizeEvent *event);
     Ui::MainWindow *ui;
+    FindDialog *search_dialog;
+    friend class FindDialog;
+    bool evidenzia_testo(QString& query, bool match_case);
 };
 #endif // MAINWINDOW_H
