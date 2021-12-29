@@ -38,7 +38,7 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="editor_testo">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -55,8 +55,8 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>729</width>
-      <height>509</height>
+      <width>100</width>
+      <height>100</height>
      </size>
     </property>
     <property name="maximumSize">

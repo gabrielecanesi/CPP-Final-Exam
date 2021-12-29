@@ -15,7 +15,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_actionApri_triggered();
+
+    void on_actionSalva_triggered();
+
+    void on_actionSalva_con_nome_triggered();
+
 private:
+    QString open_file_name;
     void resizeEvent(QResizeEvent *event);
     Ui::MainWindow *ui;
 };
