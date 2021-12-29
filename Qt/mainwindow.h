@@ -33,5 +33,6 @@ private:
     FindDialog *search_dialog;
     friend class FindDialog;
     bool evidenzia_testo(QString& query, bool match_case);
+    void reset_ricerca();
 };
 #endif // MAINWINDOW_H

@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
       search_dialog(new FindDialog(this))
 {
     ui->setupUi(this);
+    this->setWindowTitle("Documento denza nome - Editor Bello");
 
 }
 
@@ -24,6 +25,7 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::on_actionApri_triggered(){
+    reset_ricerca();
     QString file_name = QFileDialog::getOpenFileName(this, "Seleziona un file di testo", "", "File di testo (*.txt) ;; Tutti i file (*.*)");
     if (file_name != ""){
         QFile text_file(file_name);
@@ -32,6 +34,7 @@ void MainWindow::on_actionApri_triggered(){
             QTextStream input(&text_file);
             ui->editor_testo->setText(input.readAll());
             text_file.close();
+            this->setWindowTitle(open_file_name + " - Editor Bello");
         }
     }
 }
@@ -54,12 +57,13 @@ void MainWindow::on_actionSalva_triggered(){
 void MainWindow::on_actionSalva_con_nome_triggered(){
     QString new_file_name = QFileDialog::getSaveFileName(this, "Scegli dove salvare il File", "", "");
     if (new_file_name != ""){
-        open_file_name = new_file_name;
         QFile text_file(new_file_name);
         if (text_file.open(QIODevice::WriteOnly)){
+            open_file_name = new_file_name;
             QTextStream out_stream(&text_file);
             out_stream << ui->editor_testo->toPlainText();
             text_file.close();
+            this->setWindowTitle(new_file_name + " - Editor Bello");
         }
     }
 }
@@ -69,10 +73,21 @@ void MainWindow::on_actionCerca_triggered(){
     this->search_dialog->show();
 }
 
+void MainWindow::reset_ricerca(){
+    QTextCharFormat format;
+    format.setBackground(Qt::transparent);
+    QTextCursor cursor(ui->editor_testo->document());
+    cursor.setPosition(0, QTextCursor::MoveAnchor);
+    cursor.setPosition(ui->editor_testo->toPlainText().size(), QTextCursor::KeepAnchor);
+    cursor.setCharFormat(format);
+
+}
 
 void MainWindow::on_actionNuovo_triggered(){
+    reset_ricerca();
     this->open_file_name = "";
     this->ui->editor_testo->setText("");
+    this->setWindowTitle("Documento denza nome - Editor Bello");
 }
 
 bool MainWindow::evidenzia_testo(QString& query, bool match_case){
@@ -85,18 +100,13 @@ bool MainWindow::evidenzia_testo(QString& query, bool match_case){
         query = query.toLower();
     }
 
-
+    reset_ricerca();
     QTextCharFormat format;
-    format.setBackground(Qt::transparent);
     QTextCursor cursor(ui->editor_testo->document());
-    cursor.setPosition(0, QTextCursor::MoveAnchor);
-    cursor.setPosition(str.size(), QTextCursor::KeepAnchor);
-    cursor.setCharFormat(format);
-
     bool found = false;
     format.setBackground(Qt::yellow);
-    for(unsigned int i = 0; i < str.size() - query.size() + 1; ++i){
-        unsigned int count = 0;
+    for(int i = 0; i < str.size() - query.size() + 1; ++i){
+        int count = 0;
         for (; count < query.size() && str[i + count] == query[count]; ++count){}
         if(count == query.size()){
             cursor.setPosition(i, QTextCursor::MoveAnchor);

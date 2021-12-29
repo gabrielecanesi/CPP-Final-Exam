@@ -90,7 +90,7 @@
      <x>0</x>
      <y>0</y>
      <width>730</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -117,7 +117,7 @@
     <string>Apri</string>
    </property>
    <property name="shortcut">
-    <string>Meta+A</string>
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSalva">
@@ -125,7 +125,7 @@
     <string>Salva</string>
    </property>
    <property name="shortcut">
-    <string>Meta+S</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionSalva_con_nome">
@@ -133,7 +133,7 @@
     <string>Salva con nome...</string>
    </property>
    <property name="shortcut">
-    <string>Meta+Shift+S</string>
+    <string>Ctrl+Alt+S</string>
    </property>
   </action>
   <action name="actionCerca">
@@ -141,7 +141,7 @@
     <string>Cerca...</string>
    </property>
    <property name="shortcut">
-    <string>Meta+F</string>
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="actionNuovo">
@@ -149,7 +149,7 @@
     <string>Nuovo</string>
    </property>
    <property name="shortcut">
-    <string>Meta+N</string>
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>
