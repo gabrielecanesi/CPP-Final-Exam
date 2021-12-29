@@ -174,13 +174,12 @@ public:
      * @return Reference all'oggetto assegnato
      */
     SparseMatrix& operator=(const SparseMatrix& other) {
-        if (this != other){
+        if (this != &other){
             SparseMatrix temp(other);
-            //TODO: controllare swap
-            m_data = temp.m_data;
-            m_height = temp.m_height;
-            m_width = temp.m_width;
-            m_default = temp.m_default;
+            std::swap(m_data, temp.m_data);
+            std::swap(m_height, temp.m_height);
+            std::swap(m_width, temp.m_width);
+            std::swap(m_default, temp.m_default);
         }
         return *this;
     }
