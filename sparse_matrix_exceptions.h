@@ -13,7 +13,7 @@
  * @brief Eccezione lanciata quando viene specificata una dimensione non valida
  * in fase di costruzione di una SparseMatrix
  */
-class invalid_matrix_dimension_exception : public std::out_of_range {
+class invalid_matrix_dimension_exception : public std::length_error {
 public:
     explicit invalid_matrix_dimension_exception(const std::string& message);
 };
