@@ -9,6 +9,7 @@
 #define SPARSE_MATRIX_H
 #include "sparse_matrix_exceptions.h"
 #include <algorithm>
+#include <limits>
 
 /**
  *
@@ -119,7 +120,9 @@ public:
 
 
     /**
-     * @brief Costruttore che prende in input la dimensione della matrice e il valore di default
+     * @brief Costruttore che prende in input la dimensione della matrice e il valore di default.\n
+     * Per assicurare la coerenza con il numero di elementi inseriti, il numero totale di possibili elementi non può
+     * superare il valore massimo di size_type.
      * @param n numero di righe
      * @param m numero di colonne
      * @param default_value valore di default
@@ -128,6 +131,10 @@ public:
     m_height(0), m_default(default_value), m_inserted_elements(0) {
         if(n < 0 || m < 0){
             throw invalid_matrix_dimension_exception("Dimensione specificata non valida");
+        }
+
+        if(m != 0 && n != 0 && std::numeric_limits<size_type>::max()/m < n){
+            throw invalid_matrix_dimension_exception("Dimensione richiesta troppo grande");
         }
         m_height = n;
         m_width = m;
@@ -407,7 +414,7 @@ private:
  * @return il numero di elementi inseriti nella matrice che soddisfano P
  */
 template<typename T, typename Pred>
-long evaluate(const SparseMatrix<T>& M, Pred P){
+typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
     long result = 0;
     typename SparseMatrix<T>::const_iterator begin, end;
     for(begin = M.begin(), end = M.end(); begin != end; ++begin){
