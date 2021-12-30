@@ -13,6 +13,11 @@ build-Qt-Desktop-Debug/
 build-Qt-Desktop-Release/
 build-Qt-Desktop-Profile/
 
+build-*/
+main
+.DS_Store
+Qt/ui_*.h
+
 
 
 ### CLion ###

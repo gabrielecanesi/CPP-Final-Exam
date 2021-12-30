@@ -9,7 +9,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-      search_dialog(new FindDialog(this))
+      search_dialog(new FindDialog(this)),
+      file_dialog(new QFileDialog())
 {
     ui->setupUi(this);
     this->setWindowTitle("Documento senza nome - Editor Bello");
@@ -26,7 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionApri_triggered(){
     reset_ricerca();
-    QString file_name = QFileDialog::getOpenFileName(this, "Seleziona un file di testo", "", "File di testo (*.txt) ;; Tutti i file (*.*)");
+    QString file_name = file_dialog->getOpenFileName(this, "Seleziona un file di testo", "", "File di testo (*.txt) ;; Tutti i file (*.*)");
     if (file_name != ""){
         QFile text_file(file_name);
         if(text_file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -55,7 +56,7 @@ void MainWindow::on_actionSalva_triggered(){
 
 
 void MainWindow::on_actionSalva_con_nome_triggered(){
-    QString new_file_name = QFileDialog::getSaveFileName(this, "Scegli dove salvare il File", "", "File di testo (*.txt) ;; Tutti i file (*.*)");
+    QString new_file_name = file_dialog->getSaveFileName(this, "Scegli dove salvare il File", "", "File di testo (*.txt) ;; Tutti i file (*.*)");
     if (new_file_name != ""){
         QFile text_file(new_file_name);
         if (text_file.open(QIODevice::WriteOnly)){

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
 #include "finddialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -32,6 +33,7 @@ private:
     Ui::MainWindow *ui;
     FindDialog *search_dialog;
     friend class FindDialog;
+    QFileDialog *file_dialog;
     bool evidenzia_testo(QString& query, bool match_case);
     void reset_ricerca();
 };
