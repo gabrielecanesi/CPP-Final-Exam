@@ -105,7 +105,8 @@ bool MainWindow::evidenzia_testo(QString& query, bool match_case){
     QTextCharFormat format;
     QTextCursor cursor(ui->editor_testo->document());
     bool found = false;
-    format.setBackground(Qt::blue);
+    format.setBackground(Qt::yellow);
+    format.setForeground(Qt::black);
     for(int i = 0; i < str.size() - query.size() + 1; ++i){
         int count = 0;
         for (; count < query.size() && str[i + count] == query[count]; ++count){}
