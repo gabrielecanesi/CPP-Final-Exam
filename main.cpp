@@ -200,5 +200,8 @@ int main(int argc, char* argv[]) {
     test_get_elementi_inseriti();
     test_dimensione_massima();
     test_const(SparseMatrix<test_class>(1, 1, test_class(-1)));
+
+    SparseMatrix<long> matrice;
+    std::cout << "default: " << matrice.default_value() << std::endl;
     return 0;
 }
