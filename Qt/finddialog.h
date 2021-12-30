@@ -15,6 +15,11 @@ public:
     explicit FindDialog(QWidget *parent = nullptr);
     ~FindDialog();
 
+
+signals:
+void ricerca(const QString& query, bool match_case);
+
+
 private slots:
     void on_button_close_clicked();
 
@@ -22,8 +27,12 @@ private slots:
 
     void on_button_find_clicked();
 
+    void on_termine_ricerca(bool esito);
+
+
 private:
     Ui::FindDialog *ui;
+    void showEvent(QShowEvent* event);
 };
 
 #endif // FINDDIALOG_H

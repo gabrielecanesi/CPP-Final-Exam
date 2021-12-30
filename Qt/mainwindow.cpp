@@ -14,8 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle("Documento senza nome - Editor Bello");
-
+    connect(search_dialog, SIGNAL(ricerca(QString,bool)), this, SLOT(on_richiesta_ricerca(QString,bool)));
+    connect(this, SIGNAL(termine_ricerca(bool)), search_dialog, SLOT(on_termine_ricerca(bool)));
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -23,6 +25,37 @@ MainWindow::~MainWindow()
     delete search_dialog;
 }
 
+
+void MainWindow::on_richiesta_ricerca(const QString& query, bool match_case){
+    QString str;
+    QString query_temp = query;
+    if(match_case){
+        str = ui->editor_testo->toPlainText();
+    }
+    else {
+        str = ui->editor_testo->toPlainText().toLower();
+        query_temp = query.toLower();
+    }
+
+    reset_ricerca();
+    QTextCharFormat format;
+    QTextCursor cursor(ui->editor_testo->document());
+    bool found = false;
+    format.setBackground(Qt::yellow);
+    format.setForeground(Qt::black);
+    for(int i = 0; i < str.size() - query.size() + 1; ++i){
+        int count = 0;
+        for (; count < query_temp.size() && str[i + count] == query_temp[count]; ++count){}
+        if(count == query_temp.size()){
+            cursor.setPosition(i, QTextCursor::MoveAnchor);
+            cursor.setPosition(count + i, QTextCursor::KeepAnchor);
+            cursor.setCharFormat(format);
+            found = true;
+        }
+    }
+    emit termine_ricerca(found);
+
+}
 
 
 void MainWindow::on_actionApri_triggered(){
@@ -33,7 +66,7 @@ void MainWindow::on_actionApri_triggered(){
         if(text_file.open(QIODevice::ReadOnly | QIODevice::Text)){
             open_file_name = file_name;
             QTextStream input(&text_file);
-            ui->editor_testo->setText(input.readAll());
+            ui->editor_testo->setPlainText(input.readAll());
             text_file.close();
             this->setWindowTitle(open_file_name + " - Editor Bello");
         }
@@ -87,38 +120,7 @@ void MainWindow::reset_ricerca(){
 void MainWindow::on_actionNuovo_triggered(){
     reset_ricerca();
     this->open_file_name = "";
-    this->ui->editor_testo->setText("");
+    this->ui->editor_testo->setPlainText("");
     this->setWindowTitle("Documento senza nome - Editor Bello");
 }
 
-bool MainWindow::evidenzia_testo(QString& query, bool match_case){
-    QString str;
-    if(match_case){
-        str = ui->editor_testo->toPlainText();
-    }
-    else {
-        str = ui->editor_testo->toPlainText().toLower();
-        query = query.toLower();
-    }
-
-    reset_ricerca();
-    QTextCharFormat format;
-    QTextCursor cursor(ui->editor_testo->document());
-    bool found = false;
-    format.setBackground(Qt::yellow);
-    format.setForeground(Qt::black);
-    for(int i = 0; i < str.size() - query.size() + 1; ++i){
-        int count = 0;
-        for (; count < query.size() && str[i + count] == query[count]; ++count){}
-        if(count == query.size()){
-            cursor.setPosition(i, QTextCursor::MoveAnchor);
-            cursor.setPosition(count + i, QTextCursor::KeepAnchor);
-            cursor.setCharFormat(format);
-            found = true;
-        }
-    }
-
-
-
-    return found;
-}

@@ -17,6 +17,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void termine_ricerca(bool esito);
+
 private slots:
     void on_actionApri_triggered();
 
@@ -28,13 +31,13 @@ private slots:
 
     void on_actionNuovo_triggered();
 
+    void on_richiesta_ricerca(const QString& query, bool match_case);
+
 private:
     QString open_file_name;
     Ui::MainWindow *ui;
     FindDialog *search_dialog;
-    friend class FindDialog;
     QFileDialog *file_dialog;
-    bool evidenzia_testo(QString& query, bool match_case);
     void reset_ricerca();
 };
 #endif // MAINWINDOW_H

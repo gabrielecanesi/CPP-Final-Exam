@@ -55,7 +55,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QTextEdit" name="editor_testo">
+     <widget class="QPlainTextEdit" name="editor_testo">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
         <horstretch>100</horstretch>
