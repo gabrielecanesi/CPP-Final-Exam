@@ -165,9 +165,9 @@ public:
                 set(temp->data.m_i, temp->data.m_j, temp->data.data);
                 temp = temp->next;
             }
-        }catch(std::bad_alloc& e){
+        }catch(...){
             distruggi_matrice();
-            throw e;
+            throw;
         }
 
     }
@@ -224,7 +224,7 @@ public:
      * @return il valore alla posizione specificata se esiste, il valore di default altrimenti
      */
 
-    T& operator()(size_type i, size_type j) {
+    T operator()(size_type i, size_type j) const {
         if (i >= m_height || j >= m_width || i < 0 || j < 0){
             throw matrix_out_of_bounds_exception("Gli indici specificati non rientrano nei limiti di dimensione della matrice.");
         }
@@ -236,8 +236,16 @@ public:
         return found->data.data;
     }
 
-    size_type insertes_items(){
+    size_type inserted_items() const {
         return m_inserted_elements;
+    }
+
+    size_type rows() const {
+        return m_height;
+    }
+
+    size_type cols() const {
+        return m_width;
     }
 
     /**
@@ -380,7 +388,7 @@ private:
     T m_default;
 
     // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) se esiste, nullptr altrimenti
-    node* get_node(size_type i, size_type j){
+    node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
         while (temp != nullptr && temp->data.m_i != i && temp->data.m_j != j){
             temp = temp->next;

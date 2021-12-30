@@ -50,7 +50,7 @@ void test_get_elementi_inseriti(){
     matrice.set(4, 5, test_class(2));
     matrice.set(3, 4, test_class(3));
 
-    assert(matrice.insertes_items() == 2);
+    assert(matrice.inserted_items() == 2);
     std::cout << "passato" << std::endl;
 }
 
