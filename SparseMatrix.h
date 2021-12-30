@@ -1,7 +1,7 @@
 /**
  *
  * @file SparseMatrix.h
- * @author Gabriele Canesi - Matricola 851637
+ * @author Gabriele Canesi
  * @brief File contenete la definizione della classe SparseMatrix
  */
 
@@ -9,9 +9,6 @@
 #define SPARSE_MATRIX_H
 #include "sparse_matrix_exceptions.h"
 #include <algorithm>
-#include <limits>
-
-
 
 /**
  *

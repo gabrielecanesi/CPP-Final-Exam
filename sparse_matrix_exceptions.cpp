@@ -1,3 +1,9 @@
+/**
+ * @file sparse_matrix_exceptions.cpp
+ * @author Gabriele Canesi
+ * @brief File che contiene la definizione delle classi eccezione relative a SparseMatrix
+ */
+
 #include "sparse_matrix_exceptions.h"
 
 

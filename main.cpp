@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author Gabriele Canesi - Matricola 851637
+ * @author Gabriele Canesi
  * @brief File che contiene il main, i test e un funtore di prova.
  */
 
