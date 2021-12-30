@@ -56,7 +56,7 @@ public:
          * @post m_i == 0
          * @post m_j == 0
          */
-        element() : m_i(0), m_j(0) {}
+        element() : m_i(0), m_j(0), data() {}
 
         /**
          *
@@ -116,7 +116,9 @@ public:
      * @post m_height == 0
      * @post m_data == nullptr
      */
-    SparseMatrix() : m_width(0), m_height(0), m_data(nullptr), m_inserted_elements(0) {}
+
+    //TODO: valore di default
+    SparseMatrix() : m_width(0), m_height(0), m_data(nullptr), m_inserted_elements(0), m_default() {}
 
 
     /**
@@ -246,6 +248,10 @@ public:
 
     size_type cols() const {
         return m_width;
+    }
+
+    T default_value() const {
+        return m_default;
     }
 
     /**
