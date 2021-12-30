@@ -8,7 +8,9 @@
 #ifndef SPARSE_MATRIX_H
 #define SPARSE_MATRIX_H
 #include "matrix_bounds_exception.h"
+#include "invalid_matrix_dimension.h"
 #include <algorithm>
+#include <limits>
 
 
 
@@ -29,7 +31,7 @@ private:
     struct node;
 public:
 
-    typedef unsigned long size_type;
+    typedef long long size_type;
 
     /**
      * @brief Struttura che contiene i dati relativi a un elemento: riga, colonna e valore effettivo.\n
@@ -70,26 +72,21 @@ public:
          * @post m_j = j
          * @post data = data
          */
-        element(size_type i, size_type j, const T& data){
-            m_i = i;
-            m_j = j;
-            this->data = data;
-        }
+        element(size_type i, size_type j, const T& data) : m_i(i), m_j(j), data(data){}
 
 
         /**
          * @brief costruttore di copia
          * @param other l'elemento da copiare
          */
-        element(const element& other) : m_i(0), m_j(0) {
-            data = other.data;
-            m_i = other.m_i;
-            m_j = other.m_j;
-        }
+        element(const element& other) : data(other.data), m_j(other.m_j), m_i(other.m_i) {}
 
         /**
          * @brief Distruttore
          */
+
+        // Il distruttore è vuoto perchè ad occuparsi della distruzione dei nodi è SparseMatrix,
+        // dal momento che la classe è utilizzabile solo da essa.
         ~element(){}
 
 
@@ -131,16 +128,20 @@ public:
      * @param m numero di colonne
      * @param default_value valore di default
      */
-    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_width(m),
-    m_height(n), m_default(default_value), m_inserted_elements(0) {}
+    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_width(0),
+    m_height(0), m_default(default_value), m_inserted_elements(0) {
+        if(n < 0 || m < 0){
+            throw invalid_matrix_dimension("Dimensione specificata non valida");
+        }
+        m_height = n;
+        m_width = m;
+    }
 
     /**
      * @brief Copy constructor
      * @param other Reference all'oggetto da copiare
      */
 
-
-    //TODO: gestisci gli errori di memoria
 
     /**
      * @brief costruttore di copia
@@ -153,15 +154,17 @@ public:
     m_default(other.m_default), m_inserted_elements(0) {
         node* temp = other.m_data;
 
-        // Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria.
-        try{
+        /* Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria
+        *  per riportare l'oggetto a uno stato coerente
+        */
+         try{
             while (temp != nullptr){
                 set(temp->data.m_i, temp->data.m_j, temp->data.data);
                 temp = temp->next;
             }
-        }catch(...){
+        }catch(std::bad_alloc& e){
             distruggi_matrice();
-            throw;
+            throw e;
         }
 
     }
@@ -204,6 +207,7 @@ public:
             node *new_node = new node(i, j, data);
             new_node->next = m_data;
             m_data = new_node;
+            ++m_inserted_elements;
         }
         else {
             found->data.data = data;
@@ -229,6 +233,9 @@ public:
         return found->data.data;
     }
 
+    size_type insertes_items(){
+        return m_inserted_elements;
+    }
 
     /**
      * @brief classe che implementa un const forward iterator per gli alementi della classe SparseMatrix. Ritorna oggetti di tipo element
@@ -341,8 +348,8 @@ private:
         // Costruttore che prende in input gli indici e il dato da inserire.
         node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(nullptr){}
 
-        // Distruttore. è vuoto perchè la distruzione viene gestita dalla classe SparseMatrix e
-        // non è accessibile dall'esterno..
+        // Distruttore. è vuoto perchè la distruzione dei nodi viene gestita dalla classe SparseMatrix e
+        // non è accessibile dall'esterno
         ~node(){}
 
         // Operatore di assegnamento.
