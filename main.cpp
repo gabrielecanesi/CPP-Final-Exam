@@ -11,7 +11,6 @@
  * generici, utilizzando il minimo quantitativo di
  * memoria possibile.
  */
-
 #include <iostream>
 #include <cassert>
 #include "SparseMatrix.h"
@@ -29,8 +28,30 @@ struct pari{
 
 void test_dimensione_negativa(){
     std::cout << "Test dimensione negativa: ";
+    bool passed = false;
+    SparseMatrix<test_class>::size_type dim = -1;
     test_class default_value(-1);
-    SparseMatrix<test_class> matrice(-1, -1, default_value);
+    try{
+        SparseMatrix<test_class> matrice(dim, -1, default_value);
+    }
+    catch(invalid_matrix_dimension& e){
+        std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
+        passed = true;
+    }
+    assert(passed);
+    std::cout << "passato " << std::endl;
+}
+
+void test_get_elementi_inseriti(){
+    std::cout << "Test numero elementi inseriti: ";
+    test_class default_value(-1);
+    SparseMatrix<test_class> matrice(10, 10, default_value);
+    matrice.set(3, 4, test_class(5));
+    matrice.set(4, 5, test_class(2));
+    matrice.set(3, 4, test_class(3));
+
+    assert(matrice.insertes_items() == 2);
+    std::cout << "passato" << std::endl;
 }
 
 void test_evaluate(){
@@ -111,5 +132,6 @@ int main(int argc, char* argv[]) {
     test_evaluate();
     test_bounds();
     test_dimensione_negativa();
+    test_get_elementi_inseriti();
     return 0;
 }
