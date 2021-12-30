@@ -125,6 +125,23 @@ void test_assegnamento(){
     std::cout << "passato" << std::endl;
 }
 
+void test_dimensione_massima(){
+    std::cout <<  "Test dimensione massima:" << std::endl;
+    bool passed = false;
+    SparseMatrix<test_class>::size_type limit = std::numeric_limits<SparseMatrix<test_class>::size_type>::max();
+    SparseMatrix<test_class>::size_type v1 = limit / 100;
+    SparseMatrix<test_class> matrice(limit / v1, v1, test_class(-1));
+    try{
+        SparseMatrix<test_class> matrice_troppo_grossa(limit / v1, v1 + 1, test_class(-1));
+    } catch (invalid_matrix_dimension_exception &e) {
+        std::cout << "Eccezione lanciata: " << e.what() << std::endl;
+        passed = true;
+    }
+
+    assert(passed);
+    std::cout << "passato" << std::endl;
+}
+
 
 int main(int argc, char* argv[]) {
     test_copia();
@@ -133,5 +150,6 @@ int main(int argc, char* argv[]) {
     test_bounds();
     test_dimensione_negativa();
     test_get_elementi_inseriti();
+    test_dimensione_massima();
     return 0;
 }
