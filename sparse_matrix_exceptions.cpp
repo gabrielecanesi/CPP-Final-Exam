@@ -9,7 +9,7 @@
 
 
 invalid_matrix_dimension_exception::invalid_matrix_dimension_exception(const std::string &message)
-: out_of_range(message) {
+: std::length_error(message) {
 }
 
-matrix_out_of_bounds_exception::matrix_out_of_bounds_exception(const std::string &message) : out_of_range(message) {}
+matrix_out_of_bounds_exception::matrix_out_of_bounds_exception(const std::string &message) : std::out_of_range(message) {}
