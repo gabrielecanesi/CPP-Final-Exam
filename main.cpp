@@ -26,6 +26,9 @@ struct pari{
     }
 };
 
+/**
+ * @brief Test che controlla il lancio dell'eccezione in caso di dimensione negativa in input
+ */
 void test_dimensione_negativa(){
     std::cout << "Test dimensione negativa: ";
     bool passed = false;
@@ -42,6 +45,10 @@ void test_dimensione_negativa(){
     std::cout << "passato " << std::endl;
 }
 
+
+/**
+ * @brief Test che controlla la correttezza del getter del numero di elementi inseriti
+ */
 void test_get_elementi_inseriti(){
     std::cout << "Test numero elementi inseriti: ";
     test_class default_value(-1);
@@ -54,6 +61,10 @@ void test_get_elementi_inseriti(){
     std::cout << "passato" << std::endl;
 }
 
+
+/**
+ * @brief Test che controlla la correttezza della funzione evaluate.
+ */
 void test_evaluate(){
     std::cout << "Test evaluate: ";
     test_class default_value(-1);
@@ -66,6 +77,10 @@ void test_evaluate(){
     std::cout << "passato" << std::endl;
 }
 
+/**
+ * @brief Test che controlla il corretto lancio dell'eccezione nel caso in cui
+ * si dovesse accedere a una cella fuori dalle dimensioni
+ */
 void test_bounds(){
     std::cout << "Test out of bounds: ";
     bool passed = false;
@@ -82,6 +97,10 @@ void test_bounds(){
     std::cout << "passato" << std::endl;
 }
 
+
+/**
+ * @brief Test del costruttore di copia
+ */
 void test_copia(){
     std::cout << "Test sul costruttore di copia: ";
 
@@ -108,6 +127,9 @@ void test_copia(){
     std::cout << "passato" << std::endl;
 }
 
+/**
+ * @brief Test dell'operatore di assegnamento
+ */
 void test_assegnamento(){
     std::cout << "Test di assegnamento: ";
     SparseMatrix<test_class> m1(10, 10, test_class(-1));
@@ -125,6 +147,21 @@ void test_assegnamento(){
     std::cout << "passato" << std::endl;
 }
 
+void test_const(const SparseMatrix<test_class>& matrice){
+    std::cout << "Test metodi const: ";
+    matrice.begin();
+    matrice.end();
+    matrice.rows();
+    matrice.cols();
+    matrice(0, 0);
+    matrice.inserted_items();
+    std::cout << "passato" << std::endl;
+}
+
+/**
+ * @brief Test che controlla il corretto lancio dell'eccezione nel caso si
+ * superasse la dimensione totale massima consentita
+ */
 void test_dimensione_massima(){
     std::cout <<  "Test dimensione massima:" << std::endl;
     bool passed = false;
@@ -143,7 +180,18 @@ void test_dimensione_massima(){
 }
 
 
+void test_default(){
+    std::cout << "Test costruttore di default: ";
+    SparseMatrix<test_class> matrice;
+    assert(matrice.inserted_items() == 0);
+    assert(matrice.rows() == 0);
+    assert(matrice.cols() == 0);
+    std::cout << "passato" << std::endl;
+}
+
+
 int main(int argc, char* argv[]) {
+    test_default();
     test_copia();
     test_assegnamento();
     test_evaluate();
@@ -151,5 +199,6 @@ int main(int argc, char* argv[]) {
     test_dimensione_negativa();
     test_get_elementi_inseriti();
     test_dimensione_massima();
+    test_const(SparseMatrix<test_class>(1, 1, test_class(-1)));
     return 0;
 }
