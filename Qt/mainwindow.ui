@@ -55,7 +55,7 @@
      <number>0</number>
     </property>
     <item row="0" column="0">
-     <widget class="QPlainTextEdit" name="editor_testo">
+     <widget class="QPlainTextEdit" name="textEditor">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
         <horstretch>100</horstretch>
@@ -97,22 +97,22 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionNuovo"/>
-    <addaction name="actionApri"/>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
     <addaction name="separator"/>
-    <addaction name="actionSalva"/>
-    <addaction name="actionSalva_con_nome"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionSaveAs"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionCerca"/>
+    <addaction name="actionFind"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
   </widget>
-  <action name="actionApri">
+  <action name="actionOpen">
    <property name="text">
     <string>Apri</string>
    </property>
@@ -120,7 +120,7 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionSalva">
+  <action name="actionSave">
    <property name="text">
     <string>Salva</string>
    </property>
@@ -128,7 +128,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionSalva_con_nome">
+  <action name="actionSaveAs">
    <property name="text">
     <string>Salva con nome...</string>
    </property>
@@ -136,7 +136,7 @@
     <string>Ctrl+Alt+S</string>
    </property>
   </action>
-  <action name="actionCerca">
+  <action name="actionFind">
    <property name="text">
     <string>Cerca...</string>
    </property>
@@ -144,7 +144,7 @@
     <string>Ctrl+F</string>
    </property>
   </action>
-  <action name="actionNuovo">
+  <action name="actionNew">
    <property name="text">
     <string>Nuovo</string>
    </property>

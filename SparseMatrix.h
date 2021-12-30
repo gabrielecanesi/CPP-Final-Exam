@@ -2,7 +2,7 @@
  *
  * @file SparseMatrix.h
  * @author Gabriele Canesi
- * @brief File contenete la definizione della classe SparseMatrix
+ * @brief File contenente la definizione della classe SparseMatrix
  */
 
 #ifndef SPARSE_MATRIX_H

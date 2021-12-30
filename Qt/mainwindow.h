@@ -18,26 +18,28 @@ public:
     ~MainWindow();
 
 signals:
-    void termine_ricerca(bool esito);
+    // Segnale custom
+    void searchEnd(bool result);
 
 private slots:
-    void on_actionApri_triggered();
+    void on_actionOpen_triggered();
 
-    void on_actionSalva_triggered();
+    void on_actionSave_triggered();
 
-    void on_actionSalva_con_nome_triggered();
+    void on_actionSaveAs_triggered();
 
-    void on_actionCerca_triggered();
+    void on_actionFind_triggered();
 
-    void on_actionNuovo_triggered();
+    void on_actionNew_triggered();
 
-    void on_richiesta_ricerca(const QString& query, bool match_case);
+    // Slot custom per ricevere i dati con cui effettuare la ricerca nel testo
+    void on_searchRequest(const QString& query, bool matchCase);
+
 
 private:
-    QString open_file_name;
+    FindDialog *findDialog;
+    QString openFileName;
     Ui::MainWindow *ui;
-    FindDialog *search_dialog;
-    QFileDialog *file_dialog;
-    void reset_ricerca();
+    void searchReset();
 };
 #endif // MAINWINDOW_H

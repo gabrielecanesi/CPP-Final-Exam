@@ -17,17 +17,21 @@ public:
 
 
 signals:
-void ricerca(const QString& query, bool match_case);
+
+    // Segnale custom per mattere in comunicazione FindDialog e MainWindow
+void search(const QString& query, bool matchCase);
 
 
 private slots:
-    void on_button_close_clicked();
+    void on_buttonClose_clicked();
 
     void on_FindDialog_rejected();
 
-    void on_button_find_clicked();
+    void on_buttonFind_clicked();
 
-    void on_termine_ricerca(bool esito);
+    // Slot custom per verificare il risultato della ricerca
+    void on_searchEnd(bool result);
+
 
 
 private:

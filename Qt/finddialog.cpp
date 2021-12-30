@@ -6,37 +6,39 @@ FindDialog::FindDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FindDialog){
     ui->setupUi(this);
-    ui->lineEdit->setFocusPolicy(Qt::StrongFocus);
+    ui->searchLine->setFocusPolicy(Qt::StrongFocus);
 }
 
 FindDialog::~FindDialog(){
     delete ui;
 }
 
-void FindDialog::on_termine_ricerca(bool esito){
+void FindDialog::on_searchEnd(bool esito){
      if (!esito){
-        ui->label_non_trovata->setText("<font color='red'>Nessuna occorrenza trovata</font>");
+        ui->labelNotFound->setText("<font color='red'>Nessuna occorrenza trovata</font>");
     }
     else {
-        ui->label_non_trovata->setText("");
+        ui->labelNotFound->setText("");
     }
 }
 
-void FindDialog::on_button_close_clicked(){
+void FindDialog::on_buttonClose_clicked(){
     this->close();
 }
 
 // Azzera il testo quando viene chiusa
 void FindDialog::on_FindDialog_rejected(){
-    ui->lineEdit->setText("");
-    ui->label_non_trovata->setText("");
+    ui->searchLine->setText("");
+    ui->labelNotFound->setText("");
 }
 
 
-void FindDialog::on_button_find_clicked(){
-    emit ricerca(ui->lineEdit->text(), ui->checkBox->isChecked());
+void FindDialog::on_buttonFind_clicked(){
+    emit search(ui->searchLine->text(), ui->checkBox->isChecked());
 }
 
 void FindDialog::showEvent(QShowEvent*){
-    ui->lineEdit->setFocus();
+    ui->searchLine->setFocus();
 }
+
+
