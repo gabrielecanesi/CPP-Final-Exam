@@ -12,6 +12,11 @@ struct pari{
     }
 };
 
+void controllo_dimensioni_negative(){
+    test_class default_value(-1);
+    SparseMatrix<test_class> matrice(-1, 1, default_value);
+
+}
 
 void test_copia(){
     std::cout << "Test sul costruttore di copia: ";

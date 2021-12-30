@@ -1,5 +1,3 @@
-all:main
-
 main: main.o matrix_bounds_exception.o test_class.o
 	g++ main.o matrix_bounds_exception.o test_class.o -o main -ggdb -g3
 
