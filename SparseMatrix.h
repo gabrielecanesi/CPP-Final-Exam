@@ -7,8 +7,7 @@
 
 #ifndef SPARSE_MATRIX_H
 #define SPARSE_MATRIX_H
-#include "matrix_bounds_exception.h"
-#include "invalid_matrix_dimension.h"
+#include "sparse_matrix_exceptions.h"
 #include <algorithm>
 #include <limits>
 
@@ -131,7 +130,7 @@ public:
     SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_width(0),
     m_height(0), m_default(default_value), m_inserted_elements(0) {
         if(n < 0 || m < 0){
-            throw invalid_matrix_dimension("Dimensione specificata non valida");
+            throw invalid_matrix_dimension_exception("Dimensione specificata non valida");
         }
         m_height = n;
         m_width = m;
@@ -200,7 +199,7 @@ public:
      */
     void set(size_type i, size_type j, const T& data){
         if(i > m_height || j > m_width || i < 0 || j < 0){
-            throw matrix_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
+            throw matrix_out_of_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
         }
         node *found = get_node(i, j);
         if(found == nullptr){
@@ -223,7 +222,7 @@ public:
 
     T& operator()(size_type i, size_type j) {
         if (i >= m_height || j >= m_width || i < 0 || j < 0){
-            throw matrix_bounds_exception("Gli indici specificati non rientrano nei limiti di dimensione della matrice.");
+            throw matrix_out_of_bounds_exception("Gli indici specificati non rientrano nei limiti di dimensione della matrice.");
         }
 
         node *found = get_node(i, j);

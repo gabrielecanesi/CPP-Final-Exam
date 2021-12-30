@@ -15,7 +15,7 @@
 #include <cassert>
 #include "SparseMatrix.h"
 #include "test_class.h"
-
+#include "sparse_matrix_exceptions.h"
 
 /**
  * @brief Funtore di prova che controlla se un oggetto di tipo test_class è pari
@@ -34,7 +34,7 @@ void test_dimensione_negativa(){
     try{
         SparseMatrix<test_class> matrice(dim, -1, default_value);
     }
-    catch(invalid_matrix_dimension& e){
+    catch(invalid_matrix_dimension_exception& e){
         std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
         passed = true;
     }
@@ -73,7 +73,7 @@ void test_bounds(){
     SparseMatrix<test_class> matrice(10, 10, default_value);
     try{
         matrice.set(100, 9, test_class(3));
-    } catch (matrix_bounds_exception& e){
+    } catch (matrix_out_of_bounds_exception& e){
         std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
         passed = true;
     }
