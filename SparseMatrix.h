@@ -1,12 +1,15 @@
-#ifndef SPARSE_MATRIX_H
-#define SPARSE_MATRIX_H
-#include "matrix_bounds_exception.h"
-
 /**
  *
  * @file SparseMatrix.h
  * @author Gabriele Canesi - Matricola 851637
+ * @brief File contenete la definizione della classe SparseMatrix
  */
+
+#ifndef SPARSE_MATRIX_H
+#define SPARSE_MATRIX_H
+#include "matrix_bounds_exception.h"
+#include <algorithm>
+
 
 
 /**
@@ -119,7 +122,7 @@ public:
      * @post m_height == 0
      * @post m_data == nullptr
      */
-    SparseMatrix() : m_width(0), m_height(0), m_data(nullptr) {}
+    SparseMatrix() : m_width(0), m_height(0), m_data(nullptr), m_inserted_elements(0) {}
 
 
     /**
@@ -128,7 +131,8 @@ public:
      * @param m numero di colonne
      * @param default_value valore di default
      */
-    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_width(m), m_height(n), m_default(default_value){}
+    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_width(m),
+    m_height(n), m_default(default_value), m_inserted_elements(0) {}
 
     /**
      * @brief Copy constructor
@@ -145,7 +149,8 @@ public:
      * @post m_height == other.m_height
      * @post m_default == other.m_default
      */
-    SparseMatrix(const SparseMatrix& other) : m_height(other.m_height), m_width(other.m_width), m_data(nullptr), m_default(other.m_default){
+    SparseMatrix(const SparseMatrix& other) : m_height(other.m_height), m_width(other.m_width), m_data(nullptr),
+    m_default(other.m_default), m_inserted_elements(0) {
         node* temp = other.m_data;
 
         // Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria.
@@ -359,6 +364,8 @@ private:
     size_type m_width;
     size_type m_height;
 
+    size_type m_inserted_elements;
+
     // Il valore di default nel caso venga richiesta una cella vuota
     T m_default;
 
@@ -381,6 +388,7 @@ private:
 
         m_height = 0;
         m_width = 0;
+        m_inserted_elements = 0;
         m_data = nullptr;
     }
 

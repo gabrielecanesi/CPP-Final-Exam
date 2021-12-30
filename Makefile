@@ -12,4 +12,4 @@ matrix_bounds_exception.o: matrix_bounds_exception.cpp
 
 .PHONY:
 clean:
-	rm main main.o
+	rm main main.o test_class.o matrix_bounds_exception.o

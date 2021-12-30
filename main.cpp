@@ -1,21 +1,64 @@
+/**
+ * @file main.cpp
+ * @author Gabriele Canesi - Matricola 851637
+ * @brief File che contiene il main, i test e un funtore di prova.
+ */
+
+
+/**
+ * @mainpage
+ * Questo progetto è volto ad implementare una matrice sparsa contenente valori di tipi
+ * generici, utilizzando il minimo quantitativo di
+ * memoria possibile.
+ */
+
 #include <iostream>
-#include <vector>
 #include <cassert>
 #include "SparseMatrix.h"
 #include "test_class.h"
 
 
-// Funtore di test
+/**
+ * @brief Funtore di prova che controlla se un oggetto di tipo test_class è pari
+ */
 struct pari{
-    bool operator()(int n){
-        return n % 2 == 0;
+    bool operator()(test_class n){
+        return n.value % 2 == 0;
     }
 };
 
-void controllo_dimensioni_negative(){
+void test_dimensione_negativa(){
+    std::cout << "Test dimensione negativa: ";
     test_class default_value(-1);
-    SparseMatrix<test_class> matrice(-1, 1, default_value);
+    SparseMatrix<test_class> matrice(-1, -1, default_value);
+}
 
+void test_evaluate(){
+    std::cout << "Test evaluate: ";
+    test_class default_value(-1);
+    SparseMatrix<test_class> matrice(10, 10, default_value);
+    matrice.set(0, 0, test_class(10));
+    matrice.set(3, 4, test_class(11));
+    matrice.set(2, 1, test_class(12));
+
+    assert(evaluate(matrice, pari()) == 2);
+    std::cout << "passato" << std::endl;
+}
+
+void test_bounds(){
+    std::cout << "Test out of bounds: ";
+    bool passed = false;
+    test_class default_value(-1);
+    SparseMatrix<test_class> matrice(10, 10, default_value);
+    try{
+        matrice.set(100, 9, test_class(3));
+    } catch (matrix_bounds_exception& e){
+        std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
+        passed = true;
+    }
+
+    assert(passed);
+    std::cout << "passato" << std::endl;
 }
 
 void test_copia(){
@@ -65,5 +108,8 @@ void test_assegnamento(){
 int main(int argc, char* argv[]) {
     test_copia();
     test_assegnamento();
+    test_evaluate();
+    test_bounds();
+    test_dimensione_negativa();
     return 0;
 }

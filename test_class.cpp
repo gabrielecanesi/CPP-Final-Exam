@@ -1,5 +1,12 @@
+/**
+ * @file test_class.cpp
+ * @author Gabriele Canesi
+ * @brief File che contiene l'implementazione della classe di test utilizzata nel main
+ */
+
 #include <algorithm>
 #include "test_class.h"
+
 
 test_class::test_class() : value(0) {}
 
