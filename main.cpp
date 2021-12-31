@@ -21,7 +21,7 @@
  * @brief Funtore di prova che controlla se un oggetto di tipo test_class è pari
  */
 struct pari{
-    bool operator()(test_class n){
+    bool operator()(test_class n) const {
         return n.value % 2 == 0;
     }
 };
@@ -103,27 +103,20 @@ void test_bounds(){
  */
 void test_copia(){
     std::cout << "Test sul costruttore di copia: ";
-
     test_class default_value(-1);
     SparseMatrix<test_class> m1(10, 10, test_class(-1));
 
     // Controllo che i dati siano separati
     m1.set(0, 0, test_class(10));
 
-
     SparseMatrix<test_class> m2 = m1;
-
-    assert(m1(0, 0).value == 10);
-    assert(m2(0, 0).value == 10);
-
-    m2.set(0, 0, test_class(20));
-
-    test_class v1 = m1(0, 0);
-    test_class v2 = m2(0, 0);
-
-    assert(v1.value == 10);
-    assert(v2.value == 20);
-
+    const test_class& v1 = m1(0, 0);
+    const test_class& v2 = m2(0, 0);
+    assert(&m1(0, 0) != &m2(0, 0));
+    assert(m1.rows() == m2.rows());
+    assert(m1.cols() == m2.cols());
+    assert(m1.inserted_items() == m2.inserted_items());
+    assert(m1.default_value().value == m2.default_value().value);
     std::cout << "passato" << std::endl;
 }
 
@@ -133,7 +126,7 @@ void test_copia(){
 void test_assegnamento(){
     std::cout << "Test di assegnamento: ";
     SparseMatrix<test_class> m1(10, 10, test_class(-1));
-    SparseMatrix<test_class> m2(m1);
+    SparseMatrix<test_class> m2(7, 8, test_class(-1));
     m1.set(0, 0, test_class(10));
     m2.set(0, 0, test_class(20));
 
@@ -141,8 +134,7 @@ void test_assegnamento(){
     assert(m2(0, 0).value == 10);
 
     // Controllo che i dati siano separati
-    m2.set(0, 0, test_class(20));
-    assert(m1(0, 0).value == 10);
+    assert(&m1(0, 0) != &m2(0, 0));
 
     std::cout << "passato" << std::endl;
 }
@@ -186,7 +178,22 @@ void test_default(){
     assert(matrice.inserted_items() == 0);
     assert(matrice.rows() == 0);
     assert(matrice.cols() == 0);
+    assert(matrice.default_value().value == test_class().value);
     std::cout << "passato" << std::endl;
+}
+
+void test_iteratori(){
+    std::cout << "Iteratore:" << std::endl;
+    SparseMatrix<test_class> matrice(10, 10, test_class(-1));
+    matrice.set(0, 1, test_class(-1));
+    matrice.set(1, 2, test_class(3));
+    matrice.set(1, 1, test_class(5));
+    matrice.set(9, 8, test_class(7));
+
+
+    for(SparseMatrix<test_class>::const_iterator it = matrice.begin(), end = matrice.end(); it != end; ++it){
+        std::cout << "(" << it->m_i << ", " << (*it).m_j << ") -> " << it->data.value << std::endl;
+    }
 }
 
 
@@ -199,9 +206,8 @@ int main(int argc, char* argv[]) {
     test_dimensione_negativa();
     test_get_elementi_inseriti();
     test_dimensione_massima();
-    test_const(SparseMatrix<test_class>(1, 1, test_class(-1)));
+    test_const(SparseMatrix<test_class>(10, 10, test_class(-1)));
+    test_iteratori();
 
-    SparseMatrix<long> matrice;
-    std::cout << "default: " << matrice.default_value() << std::endl;
     return 0;
 }
