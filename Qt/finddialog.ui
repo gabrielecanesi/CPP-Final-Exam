@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>125</height>
+    <height>135</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,31 +25,45 @@
   <property name="maximumSize">
    <size>
     <width>350</width>
-    <height>125</height>
+    <height>135</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Cerca Testo</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="2">
+    <widget class="QPushButton" name="buttonFind">
+     <property name="text">
+      <string>Cerca</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="labelNotFound">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0">
     <widget class="QCheckBox" name="checkBox">
      <property name="text">
       <string>Match case</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QPushButton" name="buttonFind">
-     <property name="text">
-      <string>Find</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="labelNotFound">
-     <property name="text">
-      <string/>
      </property>
     </widget>
    </item>
@@ -58,7 +72,7 @@
      <item>
       <widget class="QLabel" name="findLabel">
        <property name="text">
-        <string>Find what:</string>
+        <string>Cerca testo:</string>
        </property>
       </widget>
      </item>
@@ -83,11 +97,11 @@
    <item row="1" column="2">
     <widget class="QPushButton" name="buttonClose">
      <property name="text">
-      <string>Close</string>
+      <string>Chiudi</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="2" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
