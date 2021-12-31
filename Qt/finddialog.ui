@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>135</height>
+    <height>120</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,26 +19,19 @@
   <property name="minimumSize">
    <size>
     <width>350</width>
-    <height>125</height>
+    <height>120</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>350</width>
-    <height>135</height>
+    <height>120</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Cerca Testo</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="2">
-    <widget class="QPushButton" name="buttonFind">
-     <property name="text">
-      <string>Cerca</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="labelNotFound">
      <property name="sizePolicy">
@@ -78,6 +71,12 @@
      </item>
      <item>
       <widget class="QLineEdit" name="searchLine">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="frame">
         <bool>true</bool>
        </property>
@@ -94,13 +93,6 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="buttonClose">
-     <property name="text">
-      <string>Chiudi</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -113,6 +105,20 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="buttonClose">
+     <property name="text">
+      <string>Chiudi</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="buttonFind">
+     <property name="text">
+      <string>Cerca</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
