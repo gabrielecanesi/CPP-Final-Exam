@@ -18,7 +18,7 @@ public:
     ~MainWindow();
 
 signals:
-    // Segnale custom
+    // Segnale custom emesso quando viene terminata una ricerca
     void searchEnd(bool result);
 
 private slots:
