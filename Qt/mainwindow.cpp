@@ -75,6 +75,7 @@ void MainWindow::searchStart(){
         }
     }
 
+
     // Emette il segnale per notificare la fine della ricerca a chi è in ascolto (Il FindDialog in questo caso)
     emit searchEnd(found);
 

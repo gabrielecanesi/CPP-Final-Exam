@@ -40,11 +40,11 @@ private slots:
 
 private:
     FindDialog *findDialog;
+    Ui::MainWindow *ui;
     QString openFileName;
     QString query;
     bool matchCase;
     long textLength;
-    Ui::MainWindow *ui;
     void searchReset();
     void searchStart();
 };

@@ -17,7 +17,7 @@ FindDialog::~FindDialog(){
 }
 
 void FindDialog::on_searchEnd(bool esito){
-     if (!esito){
+     if (!esito && ui->searchLine->text().length() > 0){
         ui->labelNotFound->setText("<font color='red'>Nessuna occorrenza trovata</font>");
     }
     else {
@@ -31,7 +31,6 @@ void FindDialog::on_buttonClose_clicked(){
 
 // Azzera il testo quando viene chiusa
 void FindDialog::on_FindDialog_rejected(){
-    //ui->searchLine->setText("");
     ui->labelNotFound->setText("");
 }
 
