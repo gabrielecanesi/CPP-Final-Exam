@@ -36,7 +36,9 @@ public:
      * @brief Struttura che contiene i dati relativi a un elemento: riga, colonna e valore effettivo.\n
      * Viene ritornata dal const_iterator.
      */
-    struct element{
+    class element{
+        // Faccio in modo che SparseMatrix sia in grado di accedere agli attributi privati di element
+        friend class SparseMatrix;
         /**
          * @brief Riga in cui si trova il dato
          */
@@ -50,15 +52,16 @@ public:
         /**
          * @brief Il dato effettivo
          */
-        T data;
+        T m_value;
 
+    public:
         /**
          * @brief Costruttore di default
          *
          * @post m_i == 0
          * @post m_j == 0
          */
-        element() : m_i(0), m_j(0), data() {}
+        element() : m_i(0), m_j(0), m_value() {}
 
         /**
          *
@@ -69,7 +72,7 @@ public:
          *
          * @post m_i = i
          * @post m_j = j
-         * @post data = data
+         * @post m_value = m_value
          */
 
         /*
@@ -77,7 +80,7 @@ public:
          * un'eccezione, ma devo mantenere le coordinate in uno stato coerente al momento dell'eventuale errore
          * */
         element(size_type i, size_type j, const T& data) : m_i(0), m_j(0){
-            this->data = data;
+            this->m_value = data;
             this->m_i = i;
             this->m_j = j;
         }
@@ -88,7 +91,7 @@ public:
          * @param other l'elemento da copiare
          */
         element(const element& other) : m_j(0), m_i(0) {
-            this->data = other.data;
+            this->m_value = other.m_value;
             m_i = other.m_i;
             m_j = other.m_j;
         }
@@ -114,14 +117,27 @@ public:
         element& operator=(const element& other){
             if (this != &other){
                 element temp = other;
-                std::swap(temp.data, data);
-                std::swap(temp.m_i,m_i);
+                std::swap(temp.m_value, m_value);
+                std::swap(temp.m_i, m_i);
                 std::swap(temp.m_j, m_j);
             }
 
             return *this;
         }
+
+        size_type row() const {
+            return m_i;
+        }
+
+        size_type column() const {
+            return m_j;
+        }
+
+        const T& value() const {
+            return m_value;
+        }
     };
+
     /**
      * @typedef size_type
      * @brief Un wrapper per mascherare il vero tipo di dati che rappresenta la dimensione della matrice
@@ -134,10 +150,10 @@ public:
      *
      * @post m_rows == 0
      * @post m_columns == 0
-     * @post m_data == NULL
+     * @post m_data == nullptr
      */
 
-    SparseMatrix() : m_rows(0), m_columns(0), m_data(NULL), m_inserted_elements(0), m_default() {}
+    SparseMatrix() : m_rows(0), m_columns(0), m_data(nullptr), m_inserted_elements(0), m_default() {}
 
 
     /**
@@ -148,7 +164,7 @@ public:
      * @param m numero di colonne
      * @param default_value valore di default
      */
-    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(NULL), m_rows(0),
+    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_rows(0),
                                                                      m_columns(0), m_default(default_value), m_inserted_elements(0) {
         if(n < 0 || m < 0){
             throw invalid_matrix_dimension_exception("Dimensione richiesta negativa");
@@ -169,7 +185,7 @@ public:
      * @post m_columns == other.m_columns
      * @post m_default == other.m_default
      */
-    SparseMatrix(const SparseMatrix& other) : m_columns(other.m_columns), m_rows(other.m_rows), m_data(NULL),
+    SparseMatrix(const SparseMatrix& other) : m_columns(other.m_columns), m_rows(other.m_rows), m_data(nullptr),
                                               m_default(other.m_default), m_inserted_elements(0) {
         node* temp = other.m_data;
 
@@ -178,12 +194,12 @@ public:
         *  per riportare l'oggetto a uno stato coerente nel caso la copia non dovesse terminare correttamente.
         */
          try{
-            while (temp != NULL){
-                set(temp->data.m_i, temp->data.m_j, temp->data.data);
+            while (temp != nullptr){
+                set(temp->data.m_i, temp->data.m_j, temp->data.m_value);
                 temp = temp->next;
             }
         }catch(...){
-            distruggi_matrice();
+             destroy_matrix();
             throw;
         }
 
@@ -193,7 +209,7 @@ public:
      * @brief Distruttore
      */
     ~SparseMatrix() {
-        distruggi_matrice();
+        destroy_matrix();
     }
 
     /**
@@ -223,14 +239,14 @@ public:
             throw matrix_out_of_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
         }
         node *found = get_node(i, j);
-        if(found == NULL){
+        if(found == nullptr){
             node *new_node = new node(i, j, data);
             new_node->next = m_data;
             m_data = new_node;
             ++m_inserted_elements;
         }
         else {
-            found->data.data = data;
+            found->data.m_value = data;
         }
     }
 
@@ -247,26 +263,46 @@ public:
         }
 
         node *found = get_node(i, j);
-        if(found == NULL){
+        if(found == nullptr){
             return m_default;
         }
-        //std::cout << &found->data.data << std::endl;
-        return found->data.data;
+        //std::cout << &found->m_value.m_value << std::endl;
+        return found->data.m_value;
     }
+
+    /**
+     * @brief getter per il numero di elementi inseriti
+     * @return numero di elementi inseriti
+     */
 
     size_type inserted_items() const {
         return m_inserted_elements;
     }
 
+
+    /**
+     * @brief getter per il numero di righe della matrice
+     * @return numero di righe della matrice
+     */
     size_type rows() const {
         return m_columns;
     }
 
-    size_type cols() const {
+    /**
+     * @brief getter per il numero di colonne della matrice
+     * @return numero di colonne della matrice
+     */
+
+    size_type columns() const {
         return m_rows;
     }
 
-    T default_value() const {
+    /**
+     * @brief getter per il numero di elementi inseriti
+     * @return const reference al valore di default
+     */
+
+    const T& default_value() const {
         return m_default;
     }
 
@@ -282,7 +318,7 @@ public:
         typedef const element&                  reference;
 
 
-        const_iterator() : ptr(NULL) {}
+        const_iterator() : ptr(nullptr) {}
 
         const_iterator(const const_iterator &other) {
             ptr = other.ptr;
@@ -362,24 +398,25 @@ public:
      * @return l'iteratore che rappresenta l'elemento dopo la fine della matrice.
      */
     const_iterator end() const {
-        return const_iterator(NULL);
+        return const_iterator(nullptr);
     }
 
 private:
 
     // Struttura che implementa il nodo della lista.
     struct node{
+
         element data;
         node *next;
 
         // Costruttore di default
-        node() : next(NULL){}
+        node() : next(nullptr){}
 
         // Costruttore di copia
         node(const node& other) : data(other.data), next(other.next) {}
 
         // Costruttore che prende in input gli indici e il dato da inserire.
-        node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(NULL){}
+        node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(nullptr){}
 
         // Distruttore. è vuoto perchè la distruzione dei nodi viene gestita dalla classe SparseMatrix e
         // la classe non è accessibile dall'esterno
@@ -409,18 +446,18 @@ private:
     // Il valore di default nel caso venga richiesta una cella vuota
     T m_default;
 
-    // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) se esiste, NULL altrimenti
+    // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) se esiste, nullptr altrimenti
     node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
-        while (temp != NULL && temp->data.m_i != i && temp->data.m_j != j){
+        while (temp != nullptr && temp->data.m_i != i && temp->data.m_j != j){
             temp = temp->next;
         }
         return temp;
     }
 
-    void distruggi_matrice(){
+    void destroy_matrix(){
         node* it = m_data;
-        while (it != NULL){
+        while (it != nullptr){
             node* temp = it;
             it = it->next;
             delete temp;
@@ -431,7 +468,7 @@ private:
         m_columns = 0;
         m_rows = 0;
         m_inserted_elements = 0;
-        m_data = NULL;
+        m_data = nullptr;
     }
 
 };
@@ -450,7 +487,7 @@ typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
     long result = 0;
     typename SparseMatrix<T>::const_iterator begin, end;
     for(begin = M.begin(), end = M.end(); begin != end; ++begin){
-        if(P(begin->data)){
+        if(P(begin->value())){
             ++result;
         }
     }

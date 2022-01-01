@@ -114,7 +114,7 @@ void test_copia(){
     const test_class& v2 = m2(0, 0);
     assert(&m1(0, 0) != &m2(0, 0));
     assert(m1.rows() == m2.rows());
-    assert(m1.cols() == m2.cols());
+    assert(m1.columns() == m2.columns());
     assert(m1.inserted_items() == m2.inserted_items());
     assert(m1.default_value().value == m2.default_value().value);
     std::cout << "passato" << std::endl;
@@ -144,7 +144,7 @@ void test_const(const SparseMatrix<test_class>& matrice){
     matrice.begin();
     matrice.end();
     matrice.rows();
-    matrice.cols();
+    matrice.columns();
     matrice(0, 0);
     matrice.inserted_items();
     std::cout << "passato" << std::endl;
@@ -177,7 +177,7 @@ void test_default(){
     SparseMatrix<test_class> matrice;
     assert(matrice.inserted_items() == 0);
     assert(matrice.rows() == 0);
-    assert(matrice.cols() == 0);
+    assert(matrice.columns() == 0);
     assert(matrice.default_value().value == test_class().value);
     std::cout << "passato" << std::endl;
 }
@@ -192,7 +192,7 @@ void test_iteratori(){
 
 
     for(SparseMatrix<test_class>::const_iterator it = matrice.begin(), end = matrice.end(); it != end; ++it){
-        std::cout << "(" << it->m_i << ", " << (*it).m_j << ") -> " << it->data.value << std::endl;
+        std::cout << "(" << it->row() << ", " << (*it).column() << ") -> " << it->value().value << std::endl;
     }
 }
 
