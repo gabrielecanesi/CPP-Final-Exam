@@ -34,9 +34,12 @@ private slots:
 
 
 
+    void on_searchLine_returnPressed();
+
 private:
     Ui::FindDialog *ui;
     void showEvent(QShowEvent* event);
+    void keyPressEvent(QKeyEvent* e);
 };
 
 #endif // FINDDIALOG_H

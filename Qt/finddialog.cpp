@@ -1,12 +1,15 @@
 #include "finddialog.h"
 #include "ui_finddialog.h"
 #include "mainwindow.h"
+#include <QKeyEvent>
 
 FindDialog::FindDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FindDialog){
     ui->setupUi(this);
     ui->searchLine->setFocusPolicy(Qt::StrongFocus);
+    ui->searchLine->selectAll();
+
 }
 
 FindDialog::~FindDialog(){
@@ -28,7 +31,7 @@ void FindDialog::on_buttonClose_clicked(){
 
 // Azzera il testo quando viene chiusa
 void FindDialog::on_FindDialog_rejected(){
-    ui->searchLine->setText("");
+    //ui->searchLine->setText("");
     ui->labelNotFound->setText("");
 }
 
@@ -42,3 +45,18 @@ void FindDialog::showEvent(QShowEvent*){
 }
 
 
+
+void FindDialog::on_searchLine_returnPressed(){
+    emit search(ui->searchLine->text(), ui->checkBox->isChecked());
+}
+
+void FindDialog::keyPressEvent(QKeyEvent* e) {
+    if(e->key() == Qt::Key::Key_Escape){
+        reject();
+    }
+    else if (e->key() == Qt::Key::Key_Enter){
+        if(!ui->searchLine->hasFocus()){
+            emit search(ui->searchLine->text(), ui->checkBox->isChecked());
+        }
+    }
+}
