@@ -76,8 +76,9 @@ public:
          */
 
         /*
-         * Inizializzo le coordinate a 0 perchè la copia del valore potrebbe fallire: in questo caso, non è necessaria
-         * un'eccezione, ma devo mantenere le coordinate in uno stato coerente al momento dell'eventuale errore
+         * Inizializzo le coordinate a 0 perchè la copia del valore potrebbe fallire: in questo caso, non è necessario
+         * il rilancio dell'eventuale eccezione, ma devo mantenere le coordinate in uno stato coerente al momento
+         * dell'errore
          * */
         element(size_type i, size_type j, const T& data) : m_i(0), m_j(0){
             this->m_value = data;
@@ -189,7 +190,6 @@ public:
                                               m_default(other.m_default), m_inserted_elements(0) {
         node* temp = other.m_data;
 
-        //std::cout << __cplusplus << std::endl;
         /* Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria
         *  per riportare l'oggetto a uno stato coerente nel caso la copia non dovesse terminare correttamente.
         */
