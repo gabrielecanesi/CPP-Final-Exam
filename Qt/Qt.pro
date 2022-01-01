@@ -21,6 +21,7 @@ FORMS += \
     finddialog.ui \
     mainwindow.ui
 
+TARGET = "EditorBello"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
