@@ -132,12 +132,12 @@ public:
      * @brief Costruttore di default. Istanzia una matrice vuota e ha come dato di default il risultato del costruttore
      * di default del tipo T.
      *
-     * @post m_width == 0
-     * @post m_height == 0
+     * @post m_rows == 0
+     * @post m_columns == 0
      * @post m_data == NULL
      */
 
-    SparseMatrix() : m_width(0), m_height(0), m_data(NULL), m_inserted_elements(0), m_default() {}
+    SparseMatrix() : m_rows(0), m_columns(0), m_data(NULL), m_inserted_elements(0), m_default() {}
 
 
     /**
@@ -148,8 +148,8 @@ public:
      * @param m numero di colonne
      * @param default_value valore di default
      */
-    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(NULL), m_width(0),
-    m_height(0), m_default(default_value), m_inserted_elements(0) {
+    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(NULL), m_rows(0),
+                                                                     m_columns(0), m_default(default_value), m_inserted_elements(0) {
         if(n < 0 || m < 0){
             throw invalid_matrix_dimension_exception("Dimensione richiesta negativa");
         }
@@ -157,20 +157,20 @@ public:
         if(m != 0 && n != 0 && std::numeric_limits<size_type>::max()/m < n){
             throw invalid_matrix_dimension_exception("Dimensione richiesta troppo grande");
         }
-        m_height = n;
-        m_width = m;
+        m_columns = n;
+        m_rows = m;
     }
 
 
     /**
      * @brief costruttore di copia
      * @param other l'oggetto da copiare
-     * @post m_width == other.m_width
-     * @post m_height == other.m_height
+     * @post m_rows == other.m_rows
+     * @post m_columns == other.m_columns
      * @post m_default == other.m_default
      */
-    SparseMatrix(const SparseMatrix& other) : m_height(other.m_height), m_width(other.m_width), m_data(NULL),
-    m_default(other.m_default), m_inserted_elements(0) {
+    SparseMatrix(const SparseMatrix& other) : m_columns(other.m_columns), m_rows(other.m_rows), m_data(NULL),
+                                              m_default(other.m_default), m_inserted_elements(0) {
         node* temp = other.m_data;
 
         //std::cout << __cplusplus << std::endl;
@@ -205,8 +205,8 @@ public:
         if (this != &other){
             SparseMatrix temp(other);
             std::swap(m_data, temp.m_data);
-            std::swap(m_height, temp.m_height);
-            std::swap(m_width, temp.m_width);
+            std::swap(m_columns, temp.m_columns);
+            std::swap(m_rows, temp.m_rows);
             std::swap(m_default, temp.m_default);
         }
         return *this;
@@ -219,7 +219,7 @@ public:
      * @param data
      */
     void set(size_type i, size_type j, const T& data){
-        if(i > m_height || j > m_width || i < 0 || j < 0){
+        if(i > m_columns || j > m_rows || i < 0 || j < 0){
             throw matrix_out_of_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
         }
         node *found = get_node(i, j);
@@ -242,7 +242,7 @@ public:
      */
 
     const T& operator()(size_type i, size_type j) const {
-        if (i >= m_height || j >= m_width || i < 0 || j < 0){
+        if (i >= m_columns || j >= m_rows || i < 0 || j < 0){
             throw matrix_out_of_bounds_exception("Gli indici specificati non rientrano nei limiti di dimensione della matrice.");
         }
 
@@ -259,11 +259,11 @@ public:
     }
 
     size_type rows() const {
-        return m_height;
+        return m_columns;
     }
 
     size_type cols() const {
-        return m_width;
+        return m_rows;
     }
 
     T default_value() const {
@@ -382,15 +382,15 @@ private:
         node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(NULL){}
 
         // Distruttore. è vuoto perchè la distruzione dei nodi viene gestita dalla classe SparseMatrix e
-        // non è accessibile dall'esterno
+        // la classe non è accessibile dall'esterno
         ~node(){}
 
         // Operatore di assegnamento.
         node& operator=(const node& other){
             if (this != &other){
                 node temp = other;
-                data = other.data;
-                next = temp.next;
+                std::swap(data, temp.data);
+                std::swap(next, temp.next);
             }
             return *this;
         }
@@ -401,8 +401,8 @@ private:
     node *m_data;
 
     // Gli attributi che memorizzano larghezza e altezza della matrice
-    size_type m_width;
-    size_type m_height;
+    size_type m_rows;
+    size_type m_columns;
 
     size_type m_inserted_elements;
 
@@ -428,11 +428,10 @@ private:
 
         // Riporto uno stato coerente
 
-        m_height = 0;
-        m_width = 0;
+        m_columns = 0;
+        m_rows = 0;
         m_inserted_elements = 0;
         m_data = NULL;
-        //TODO: valutare reinizializzazione del tipo di default
     }
 
 };
