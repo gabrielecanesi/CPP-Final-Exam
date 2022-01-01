@@ -36,10 +36,16 @@ private slots:
     void on_searchRequest(const QString& query, bool matchCase);
 
 
+    void on_textEditor_textChanged();
+
 private:
     FindDialog *findDialog;
     QString openFileName;
+    QString query;
+    bool matchCase;
+    long textLength;
     Ui::MainWindow *ui;
     void searchReset();
+    void searchStart();
 };
 #endif // MAINWINDOW_H

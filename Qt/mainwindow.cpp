@@ -9,7 +9,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       findDialog(new FindDialog(this)),
-      ui(new Ui::MainWindow)
+      ui(new Ui::MainWindow),
+      query(""),
+      matchCase(false),
+      textLength(0)
 {
     ui->setupUi(this);
     this->setWindowTitle("Documento senza nome - Editor Bello");
@@ -28,14 +31,19 @@ MainWindow::~MainWindow()
 
     // Dealloca i vari dialog allocati
     delete findDialog;
+
+    // Imposto i dati sulla ricerca ai valori di partenza
+    textLength = 0;
+    matchCase = false;
 }
 
 
-void MainWindow::on_searchRequest(const QString& query, bool match_case){
+void MainWindow::searchStart(){
+
     // Trasforma le stringhe da comparare in lowercase se matchCase è true
     QString str;
     QString query_temp = query;
-    if(match_case){
+    if(matchCase){
         str = ui->textEditor->toPlainText();
     }
     else {
@@ -72,6 +80,12 @@ void MainWindow::on_searchRequest(const QString& query, bool match_case){
 
 }
 
+void MainWindow::on_searchRequest(const QString& query, bool matchCase){
+    this->query = query;
+    this->matchCase = matchCase;
+    searchStart();
+}
+
 
 void MainWindow::on_actionOpen_triggered(){
     // Resetta i risultati di una eventuale ricerca precedente
@@ -91,6 +105,7 @@ void MainWindow::on_actionOpen_triggered(){
             ui->textEditor->setPlainText(input.readAll());
             file.close();
             this->setWindowTitle(openFileName + " - Editor Bello");
+            textLength = ui->textEditor->toPlainText().length();
         }
     }
 }
@@ -145,11 +160,18 @@ void MainWindow::searchReset(){
 }
 
 void MainWindow::on_actionNew_triggered(){
-
     // Cancella il contenuto del buffer e reimposta il titolo della barra
     searchReset();
     this->openFileName = "";
     this->ui->textEditor->setPlainText("");
     this->setWindowTitle("Documento senza nome - Editor Bello");
+}
+
+
+void MainWindow::on_textEditor_textChanged(){
+    if(textLength != ui->textEditor->toPlainText().length()){
+        textLength = ui->textEditor->toPlainText().length();
+        searchStart();
+    }
 }
 
