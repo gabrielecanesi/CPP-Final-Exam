@@ -8,8 +8,6 @@ FindDialog::FindDialog(QWidget *parent) :
     ui(new Ui::FindDialog){
     ui->setupUi(this);
     ui->searchLine->setFocusPolicy(Qt::StrongFocus);
-    ui->searchLine->selectAll();
-
 }
 
 FindDialog::~FindDialog(){
@@ -41,6 +39,7 @@ void FindDialog::on_buttonFind_clicked(){
 
 void FindDialog::showEvent(QShowEvent*){
     ui->searchLine->setFocus();
+    ui->searchLine->selectAll();
 }
 
 
