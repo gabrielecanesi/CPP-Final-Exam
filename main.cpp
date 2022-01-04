@@ -21,8 +21,8 @@
  * @brief Funtore di prova che controlla se un oggetto di tipo test_class è pari
  */
 struct pari{
-    bool operator()(test_class n) const {
-        return n.value % 2 == 0;
+    bool operator()(const test_class& n) const {
+        return n.value() % 2 == 0;
     }
 };
 
@@ -38,7 +38,7 @@ void test_dimensione_negativa(){
         SparseMatrix<test_class> matrice(dim, -1, default_value);
     }
     catch(invalid_matrix_dimension_exception& e){
-        std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
+        std::cout << std::endl << "invalid_matrix_dimension_exception lanciata correttamente: " << e.what() << std::endl;
         passed = true;
     }
     assert(passed);
@@ -67,13 +67,13 @@ void test_get_elementi_inseriti(){
  */
 void test_evaluate(){
     std::cout << "Test evaluate: ";
-    test_class default_value(-1);
+    test_class default_value(0);
     SparseMatrix<test_class> matrice(10, 10, default_value);
     matrice.set(0, 0, test_class(10));
     matrice.set(3, 4, test_class(11));
     matrice.set(2, 1, test_class(12));
 
-    assert(evaluate(matrice, pari()) == 2);
+    assert(evaluate(matrice, pari()) == 2 + (matrice.rows() * matrice.columns() - matrice.inserted_items()));
     std::cout << "passato" << std::endl;
 }
 
@@ -89,7 +89,7 @@ void test_bounds(){
     try{
         matrice.set(100, 9, test_class(3));
     } catch (matrix_out_of_bounds_exception& e){
-        std::cout << std::endl << "Eccezione lanciata: " << e.what() << std::endl;
+        std::cout << std::endl << "matrix_out_of_bounds_exception lanciata correttamente: " << e.what() << std::endl;
         passed = true;
     }
 
@@ -116,7 +116,7 @@ void test_copia(){
     assert(m1.rows() == m2.rows());
     assert(m1.columns() == m2.columns());
     assert(m1.inserted_items() == m2.inserted_items());
-    assert(m1.default_value().value == m2.default_value().value);
+    assert(m1.default_value().value() == m2.default_value().value());
     std::cout << "passato" << std::endl;
 }
 
@@ -131,7 +131,7 @@ void test_assegnamento(){
     m2.set(0, 0, test_class(20));
 
     m2 = m1;
-    assert(m2(0, 0).value == 10);
+    assert(m2(0, 0).value() == 10);
 
     // Controllo che i dati siano separati
     assert(&m1(0, 0) != &m2(0, 0));
@@ -178,7 +178,7 @@ void test_default(){
     assert(matrice.inserted_items() == 0);
     assert(matrice.rows() == 0);
     assert(matrice.columns() == 0);
-    assert(matrice.default_value().value == test_class().value);
+    assert(matrice.default_value().value() == test_class().value());
     std::cout << "passato" << std::endl;
 }
 
@@ -192,9 +192,16 @@ void test_iteratori(){
 
 
     for(SparseMatrix<test_class>::const_iterator it = matrice.begin(), end = matrice.end(); it != end; ++it){
-        std::cout << "(" << it->row() << ", " << (*it).column() << ") -> " << it->value().value << std::endl;
+        std::cout << "(" << it->row() << ", " << (*it).column() << ") -> " << it->value().value() << std::endl;
     }
 }
+
+void test_element(){
+    SparseMatrix<test_class>::element el(1, 2, test_class(1));
+    SparseMatrix<test_class>::element el2(3, 4, test_class(34));
+    el2 = el;
+}
+
 
 
 int main(int argc, char* argv[]) {
@@ -208,6 +215,7 @@ int main(int argc, char* argv[]) {
     test_dimensione_massima();
     test_const(SparseMatrix<test_class>(10, 10, test_class(-1)));
     test_iteratori();
+    test_element();
 
     return 0;
 }
