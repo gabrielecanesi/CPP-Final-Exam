@@ -12,13 +12,14 @@
  * @brief classe utilizzata come tipo custom nei test di SparseMatrix
  */
 class test_class {
+    int *ptr;
 public:
-    int value;
     test_class();
     test_class(const test_class& other);
     ~test_class();
     test_class& operator=(const test_class& other);
     explicit test_class(int value);
+    int value() const;
 };
 
 

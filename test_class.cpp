@@ -8,18 +8,34 @@
 #include "test_class.h"
 
 
-test_class::test_class() : value(0) {}
+test_class::test_class() : ptr(new int(0)) {}
 
-test_class::test_class(const test_class &other) : value(other.value) {}
+test_class::test_class(const test_class &other) {
+    if(other.ptr != nullptr) {
+        ptr = new int(other.value());
+    }
+}
 
-test_class::~test_class() {}
+test_class::~test_class() {
+    delete ptr;
+    ptr = nullptr;
+}
 
 test_class &test_class::operator=(const test_class &other) {
     if(this != &other){
         test_class temp = other;
-        std::swap(value, temp.value);
+        std::swap(ptr, temp.ptr);
     }
     return *this;
 }
 
-test_class::test_class(int value) : value(value) {}
+test_class::test_class(int value) {
+    this->ptr = new int(value);
+}
+
+int test_class::value() const {
+    if(ptr == nullptr){
+        return -1;
+    }
+    return *ptr;
+}
