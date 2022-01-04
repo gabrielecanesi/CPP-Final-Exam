@@ -39,6 +39,12 @@ public:
     class element{
         // Faccio in modo che SparseMatrix sia in grado di accedere agli attributi privati di element
         friend class SparseMatrix;
+
+        /**
+         * @brief Il dato effettivo
+         */
+        T m_value;
+
         /**
          * @brief Riga in cui si trova il dato
          */
@@ -49,10 +55,7 @@ public:
          */
         size_type m_j;
 
-        /**
-         * @brief Il dato effettivo
-         */
-        T m_value;
+
 
     public:
         /**
@@ -61,7 +64,7 @@ public:
          * @post m_i == 0
          * @post m_j == 0
          */
-        element() : m_i(0), m_j(0), m_value() {}
+        element() : m_value(), m_i(0), m_j(0) {}
 
         /**
          *
@@ -76,33 +79,21 @@ public:
          */
 
         /*
-         * Inizializzo le coordinate a 0 perchè la copia del valore potrebbe fallire: in questo caso, non è necessario
-         * il rilancio dell'eventuale eccezione, ma devo mantenere le coordinate in uno stato coerente al momento
-         * dell'errore
+         * Se la copia del valore ha successo, imposto gli indici.
          * */
-        element(size_type i, size_type j, const T& data) : m_i(0), m_j(0){
-            this->m_value = data;
-            this->m_i = i;
-            this->m_j = j;
-        }
+        element(size_type i, size_type j, const T& data) : m_value(data), m_i(i), m_j(j) {}
 
 
         /**
          * @brief costruttore di copia
          * @param other l'elemento da copiare
          */
-        element(const element& other) : m_j(0), m_i(0) {
-            this->m_value = other.m_value;
-            m_i = other.m_i;
-            m_j = other.m_j;
-        }
+        element(const element& other) : m_value(other.m_value), m_j(other.m_j), m_i(other.m_i) {}
 
         /**
          * @brief Distruttore
          */
 
-        // Il distruttore è vuoto perchè ad occuparsi della distruzione dei nodi è SparseMatrix,
-        // dal momento che la classe è utilizzabile solo da essa.
         ~element(){
             m_i = 0;
             m_j = 0;
@@ -117,10 +108,9 @@ public:
 
         element& operator=(const element& other){
             if (this != &other){
-                element temp = other;
-                std::swap(temp.m_value, m_value);
-                std::swap(temp.m_i, m_i);
-                std::swap(temp.m_j, m_j);
+                m_value = other.m_value;
+                m_i = other.m_i;
+                m_j = other.m_j;
             }
 
             return *this;
@@ -166,7 +156,8 @@ public:
      * @param default_value valore di default
      */
     SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_rows(0),
-                                                                     m_columns(0), m_default(default_value), m_inserted_elements(0) {
+                                                                     m_columns(0), m_inserted_elements(0),
+                                                                     m_default(default_value){
         if(n < 0 || m < 0){
             throw invalid_matrix_dimension_exception("Dimensione richiesta negativa");
         }
@@ -186,20 +177,22 @@ public:
      * @post m_columns == other.m_columns
      * @post m_default == other.m_default
      */
-    SparseMatrix(const SparseMatrix& other) : m_columns(other.m_columns), m_rows(other.m_rows), m_data(nullptr),
-                                              m_default(other.m_default), m_inserted_elements(0) {
+    SparseMatrix(const SparseMatrix& other) : m_default(other.m_default), m_columns(other.m_columns),
+                                              m_rows(other.m_rows), m_data(nullptr),
+                                              m_inserted_elements(0) {
+        std::cout << "Copia" << std::endl;
         node* temp = other.m_data;
 
         /* Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria
         *  per riportare l'oggetto a uno stato coerente nel caso la copia non dovesse terminare correttamente.
         */
-         try{
+        try{
             while (temp != nullptr){
                 set(temp->data.m_i, temp->data.m_j, temp->data.m_value);
                 temp = temp->next;
             }
         }catch(...){
-             destroy_matrix();
+            destroy_matrix();
             throw;
         }
 
@@ -366,23 +359,17 @@ public:
             return ptr != other.ptr;
         }
 
-        // Solo se serve anche iterator aggiungere le precedenti definizioni
-
     private:
-        //Dati membro
-
         const node *ptr;
-        // La classe container deve essere messa friend dell'iteratore per poter
-        // usare il costruttore di inizializzazione.
+
+
         friend class SparseMatrix;
 
         // Costruttore privato di inizializzazione usato dalla classe container
         // tipicamente nei metodi begin e end
         explicit const_iterator(const node* ptr) : ptr(ptr) {}
 
-        // !!! Eventuali altri metodi privati
-
-    }; // classe const_iterator
+    };
 
 
     /**
@@ -425,9 +412,8 @@ private:
         // Operatore di assegnamento.
         node& operator=(const node& other){
             if (this != &other){
-                node temp = other;
-                std::swap(data, temp.data);
-                std::swap(next, temp.next);
+                data = other.data;
+                next = other.next;
             }
             return *this;
         }
@@ -446,7 +432,8 @@ private:
     // Il valore di default nel caso venga richiesta una cella vuota
     T m_default;
 
-    // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) se esiste, nullptr altrimenti
+    // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) e lo ritorna se
+    // esiste, nullptr altrimenti
     node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
         while (temp != nullptr && temp->data.m_i != i && temp->data.m_j != j){
@@ -484,13 +471,17 @@ private:
  */
 template<typename T, typename Pred>
 typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
-    long result = 0;
+    typename SparseMatrix<T>::size_type  result = 0;
     typename SparseMatrix<T>::const_iterator begin, end;
     for(begin = M.begin(), end = M.end(); begin != end; ++begin){
         if(P(begin->value())){
             ++result;
         }
     }
+    if(P(M.default_value())){
+        result += (M.rows() * M.columns() - M.inserted_items());
+    }
+
     return result;
 }
 
