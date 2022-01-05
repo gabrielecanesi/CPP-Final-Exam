@@ -22,5 +22,7 @@ public:
     int value() const;
 };
 
+//Operatore utile per debug
+std::ostream& operator<<(std::ostream& stream, const test_class& test_instance);
 
 #endif // TEST_CLASS_H
