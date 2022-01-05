@@ -116,14 +116,29 @@ public:
             return *this;
         }
 
+
+        /**
+         * @brief getter per la riga dell'elemento
+         * @return valore della riga
+         */
+
         size_type row() const {
             return m_i;
         }
+
+        /**
+         * @brief getter per la colonna del valore
+         * @return valore della colonna
+         */
 
         size_type column() const {
             return m_j;
         }
 
+        /**
+         * @brief getter per il valore effettivo
+         * @return const reference al valore effettivo
+         */
         const T& value() const {
             return m_value;
         }
@@ -180,7 +195,6 @@ public:
     SparseMatrix(const SparseMatrix& other) : m_default(other.m_default), m_columns(other.m_columns),
                                               m_rows(other.m_rows), m_data(nullptr),
                                               m_inserted_elements(0) {
-        std::cout << "Copia" << std::endl;
         node* temp = other.m_data;
 
         /* Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria
@@ -485,5 +499,14 @@ typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
     return result;
 }
 
+// Operatore utile per debug
+template<typename T>
+std::ostream & operator<<(std::ostream& stream, const SparseMatrix<T>& mat){
+    typename SparseMatrix<T>::const_iterator it = mat.begin();
+    for(; it != mat.end(); ++it){
+        stream << "(" << it->row() << ", " << it->column() << ") -> " << it->value() << std::endl;
+    }
+    return stream;
+}
 
 #endif // SPARSE_MATRIX_H
