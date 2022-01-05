@@ -6,7 +6,6 @@
 
 #include <algorithm>
 #include "test_class.h"
-#include <iostream>
 
 
 test_class::test_class() : ptr(new int(0)) {}

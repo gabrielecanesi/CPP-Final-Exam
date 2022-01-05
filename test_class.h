@@ -8,6 +8,8 @@
 #ifndef TEST_CLASS_H
 #define TEST_CLASS_H
 
+#include <iostream>
+
 /**
  * @brief classe utilizzata come tipo custom nei test di SparseMatrix
  */
