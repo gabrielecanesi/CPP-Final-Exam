@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include "test_class.h"
+#include <iostream>
 
 
 test_class::test_class() : ptr(new int(0)) {}
@@ -38,4 +39,10 @@ int test_class::value() const {
         return -1;
     }
     return *ptr;
+}
+
+
+std::ostream& operator<<(std::ostream& stream, const test_class& test_instance){
+    stream << test_instance.value();
+    return stream;
 }
