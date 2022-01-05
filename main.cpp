@@ -200,6 +200,7 @@ void test_element(){
     SparseMatrix<test_class>::element el(1, 2, test_class(1));
     SparseMatrix<test_class>::element el2(3, 4, test_class(34));
     el2 = el;
+    assert(&el.value() != &el2.value());
 }
 
 
