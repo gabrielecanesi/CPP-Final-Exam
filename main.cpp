@@ -56,7 +56,7 @@ void test_get_elementi_inseriti(){
     matrice.set(3, 4, test_class(5));
     matrice.set(4, 5, test_class(2));
     matrice.set(3, 4, test_class(3));
-
+    std::cout << matrice << std::endl;
     assert(matrice.inserted_items() == 2);
     std::cout << "passato" << std::endl;
 }
@@ -198,10 +198,12 @@ void test_iteratori(){
 }
 
 void test_element(){
+    std::cout << "Test dei metodi di element: ";
     SparseMatrix<test_class>::element el(1, 2, test_class(1));
     SparseMatrix<test_class>::element el2(3, 4, test_class(34));
     el2 = el;
     assert(&el.value() != &el2.value());
+    std::cout << " passato" << std::endl;
 }
 
 
