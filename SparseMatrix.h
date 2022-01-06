@@ -528,9 +528,15 @@ typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T> &M, Pred P){
 template<typename T>
 std::ostream& operator<<(std::ostream &stream, const SparseMatrix<T> &mat){
     typename SparseMatrix<T>::const_iterator it = mat.begin();
-    for(; it != mat.end(); ++it){
-        stream << "(" << it->row() << ", " << it->column() << ") -> " << it->value() << std::endl;
+    stream << "{";
+    while (it != mat.end()){
+        stream << "(" << it->row() << ", " << it->column() << ") -> " << it->value();
+        ++it;
+        if(it != mat.end()){
+            stream << "; ";
+        }
     }
+    stream << "}";
     return stream;
 }
 
