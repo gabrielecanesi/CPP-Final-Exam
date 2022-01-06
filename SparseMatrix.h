@@ -81,14 +81,14 @@ public:
         /*
          * Se la copia del valore ha successo, imposto gli indici.
          * */
-        element(size_type i, size_type j, const T& data) : m_value(data), m_i(i), m_j(j) {}
+        element(size_type i, size_type j, const T &data) : m_value(data), m_i(i), m_j(j) {}
 
 
         /**
          * @brief costruttore di copia
          * @param other l'elemento da copiare
          */
-        element(const element& other) : m_value(other.m_value), m_j(other.m_j), m_i(other.m_i) {}
+        element(const element &other) : m_value(other.m_value), m_j(other.m_j), m_i(other.m_i) {}
 
         /**
          * @brief Distruttore
@@ -106,7 +106,7 @@ public:
          * @return se stesso
          */
 
-        element& operator=(const element& other){
+        element& operator=(const element &other){
             if (this != &other){
                 m_value = other.m_value;
                 m_i = other.m_i;
@@ -170,7 +170,7 @@ public:
      * @param m numero di colonne
      * @param default_value valore di default
      */
-    SparseMatrix(size_type n, size_type m, const T& default_value) : m_data(nullptr), m_rows(0),
+    SparseMatrix(size_type n, size_type m, const T &default_value) : m_data(nullptr), m_rows(0),
                                                                      m_columns(0), m_inserted_elements(0),
                                                                      m_default(default_value){
         if(n < 0 || m < 0){
@@ -192,7 +192,7 @@ public:
      * @post m_columns == other.m_columns
      * @post m_default == other.m_default
      */
-    SparseMatrix(const SparseMatrix& other) : m_default(other.m_default), m_columns(other.m_columns),
+    SparseMatrix(const SparseMatrix &other) : m_default(other.m_default), m_columns(other.m_columns),
                                               m_rows(other.m_rows), m_data(nullptr),
                                               m_inserted_elements(0) {
         node* temp = other.m_data;
@@ -223,7 +223,7 @@ public:
      * @param other Reference all'oggetto da assegnare
      * @return Reference all'oggetto assegnato
      */
-    SparseMatrix& operator=(const SparseMatrix& other) {
+    SparseMatrix& operator=(const SparseMatrix &other) {
         if (this != &other){
             SparseMatrix temp(other);
             std::swap(m_data, temp.m_data);
@@ -240,7 +240,7 @@ public:
      * @param j indice della colonna
      * @param data
      */
-    void set(size_type i, size_type j, const T& data){
+    void set(size_type i, size_type j, const T &data){
         if(i > m_columns || j > m_rows || i < 0 || j < 0){
             throw matrix_out_of_bounds_exception("Gli indici non rientrano nelle dimensioni della matrice");
         }
@@ -406,7 +406,7 @@ public:
 
         friend class SparseMatrix;
 
-        explicit const_iterator(const node* ptr) : ptr(ptr) {}
+        explicit const_iterator(const node *ptr) : ptr(ptr) {}
 
     };
 
@@ -439,17 +439,17 @@ private:
         node() : next(nullptr){}
 
         // Costruttore di copia
-        node(const node& other) : data(other.data), next(other.next) {}
+        node(const node &other) : data(other.data), next(other.next) {}
 
         // Costruttore che prende in input gli indici e il dato da inserire.
-        node(size_type i, size_type j, const T& data) : data(element(i, j, data)), next(nullptr){}
+        node(size_type i, size_type j, const T &data) : data(element(i, j, data)), next(nullptr){}
 
         // Distruttore. è vuoto perchè la distruzione dei nodi viene gestita dalla classe SparseMatrix e
         // la classe non è accessibile dall'esterno
         ~node(){}
 
         // Operatore di assegnamento.
-        node& operator=(const node& other){
+        node& operator=(const node &other){
             if (this != &other){
                 data = other.data;
                 next = other.next;
@@ -509,7 +509,7 @@ private:
  * @return il numero di elementi inseriti nella matrice che soddisfano P
  */
 template<typename T, typename Pred>
-typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
+typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T> &M, Pred P){
     typename SparseMatrix<T>::size_type  result = 0;
     typename SparseMatrix<T>::const_iterator begin, end;
     for(begin = M.begin(), end = M.end(); begin != end; ++begin){
@@ -526,7 +526,7 @@ typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T>& M, Pred P){
 
 // Operatore utile per debug
 template<typename T>
-std::ostream & operator<<(std::ostream& stream, const SparseMatrix<T>& mat){
+std::ostream& operator<<(std::ostream &stream, const SparseMatrix<T> &mat){
     typename SparseMatrix<T>::const_iterator it = mat.begin();
     for(; it != mat.end(); ++it){
         stream << "(" << it->row() << ", " << it->column() << ") -> " << it->value() << std::endl;
