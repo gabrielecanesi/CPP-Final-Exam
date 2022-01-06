@@ -30,7 +30,7 @@ private:
     struct node;
 public:
 
-    typedef long long size_type;
+    typedef long size_type;
 
     /**
      * @brief Struttura che contiene i dati relativi a un elemento: riga, colonna e valore effettivo.\n
@@ -197,7 +197,7 @@ public:
                                               m_inserted_elements(0) {
         node* temp = other.m_data;
 
-        /* Dal momento che set chiamerà una new, devo gestire eventuali errori di memoria
+        /* Dal momento che set chiamerà una new, devo gestire eventuali errori
         *  per riportare l'oggetto a uno stato coerente nel caso la copia non dovesse terminare correttamente.
         */
         try{
@@ -209,7 +209,6 @@ public:
             destroy_matrix();
             throw;
         }
-
     }
 
     /**
@@ -273,7 +272,7 @@ public:
         if(found == nullptr){
             return m_default;
         }
-        //std::cout << &found->m_value.m_value << std::endl;
+
         return found->data.m_value;
     }
 
@@ -325,8 +324,15 @@ public:
         typedef const element&                  reference;
 
 
+        /**
+         * @brief costruttore di default
+         */
         const_iterator() : ptr(nullptr) {}
 
+        /**
+         * @brief costruttore di copia
+         * @param other l'iteratore da copiare
+         */
         const_iterator(const const_iterator &other) {
             ptr = other.ptr;
         }
@@ -340,35 +346,56 @@ public:
 
         ~const_iterator() {}
 
-        // Ritorna il dato riferito dall'iteratore (dereferenziamento)
+
+        /**
+         * @brief operatore di dereferenziamento
+         * @return reference all'elemento puntato dall'iteratore
+         */
         reference operator*() const {
             return ptr->data;
         }
 
-        // Ritorna il puntatore al dato riferito dall'iteratore
+        /**
+         * @return puntatore all'elemento puntato dall'iteratore
+         */
         pointer operator->() const {
             return &(ptr->data);
         }
 
-        // Operatore di iterazione post-incremento
+
+        /**
+         * @brief operatore di post incremento
+         * @return l'iteratore allo stato antecedente la modifica
+         */
         const_iterator operator++(int) {
             const_iterator temp = *this;
             temp.ptr = temp.ptr->next;
             return temp;
         }
 
-        // Operatore di iterazione pre-incremento
+
+        /**
+         * @operatore di preincremento
+         * @return l'iteratore al nuovo elemento
+         */
         const_iterator& operator++() {
             ptr = ptr->next;
             return *this;
         }
 
-        // Uguaglianza
+
+        /**
+         * @param other l'iteratore da confrontare
+         * @return true se this e other puntano allo stesso elemento
+         */
         bool operator==(const const_iterator &other) const {
             return ptr == other.ptr;
         }
 
-        // Diversita'
+        /**
+         * @param other l'iteratore da confrontare
+         * @return false se this e other puntano allo stesso elemento
+         */
         bool operator!=(const const_iterator &other) const {
             return ptr != other.ptr;
         }
@@ -379,8 +406,6 @@ public:
 
         friend class SparseMatrix;
 
-        // Costruttore privato di inizializzazione usato dalla classe container
-        // tipicamente nei metodi begin e end
         explicit const_iterator(const node* ptr) : ptr(ptr) {}
 
     };
@@ -450,7 +475,7 @@ private:
     // esiste, nullptr altrimenti
     node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
-        while (temp != nullptr && temp->data.m_i != i && temp->data.m_j != j){
+        while (temp != nullptr && (temp->data.m_i != i || temp->data.m_j != j)){
             temp = temp->next;
         }
         return temp;
