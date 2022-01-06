@@ -112,11 +112,19 @@ void test_copia(){
     SparseMatrix<test_class> m2 = m1;
     const test_class& v1 = m1(0, 0);
     const test_class& v2 = m2(0, 0);
+
+    // Controllo che gli indirizzi di memoria dei valori siano diversi
     assert(&m1(0, 0) != &m2(0, 0));
+
+    // Controllo che le dimensioni coincidano
     assert(m1.rows() == m2.rows());
     assert(m1.columns() == m2.columns());
     assert(m1.inserted_items() == m2.inserted_items());
+
+    // Controllo che il valore di default sia stato copiato correttamente
     assert(m1.default_value().value() == m2.default_value().value());
+    assert(&m1.default_value() != &m2.default_value());
+
     std::cout << "passato" << std::endl;
 }
 
@@ -131,7 +139,7 @@ void test_assegnamento(){
     m2.set(0, 0, test_class(20));
 
     m2 = m1;
-    assert(m2(0, 0).value() == 10);
+    assert(m2(0, 0).value() == m1(0, 0).value());
 
     // Controllo che i dati siano separati
     assert(&m1(0, 0) != &m2(0, 0));
@@ -139,16 +147,7 @@ void test_assegnamento(){
     std::cout << "passato" << std::endl;
 }
 
-void test_const(const SparseMatrix<test_class>& matrice){
-    std::cout << "Test metodi const: ";
-    matrice.begin();
-    matrice.end();
-    matrice.rows();
-    matrice.columns();
-    matrice(0, 0);
-    matrice.inserted_items();
-    std::cout << "passato" << std::endl;
-}
+
 
 /**
  * @brief Test che controlla il corretto lancio dell'eccezione nel caso si
@@ -157,13 +156,15 @@ void test_const(const SparseMatrix<test_class>& matrice){
 void test_dimensione_massima(){
     std::cout <<  "Test dimensione massima:" << std::endl;
     bool passed = false;
+
+    // Controllo che la dimensione totale non possa superare il limite superiore di size_type.
     SparseMatrix<test_class>::size_type limit = std::numeric_limits<SparseMatrix<test_class>::size_type>::max();
     SparseMatrix<test_class>::size_type v1 = limit / 100;
     SparseMatrix<test_class> matrice(limit / v1, v1, test_class(-1));
     try{
         SparseMatrix<test_class> matrice_troppo_grossa(limit / v1, v1 + 1, test_class(-1));
     } catch (invalid_matrix_dimension_exception &e) {
-        std::cout << "Eccezione lanciata: " << e.what() << std::endl;
+        std::cout << "invalid_matrix_dimension_exception lanciata correttamente: " << e.what() << std::endl;
         passed = true;
     }
 
@@ -214,7 +215,6 @@ int main(int argc, char* argv[]) {
     test_dimensione_negativa();
     test_get_elementi_inseriti();
     test_dimensione_massima();
-    test_const(SparseMatrix<test_class>(10, 10, test_class(-1)));
     test_iteratori();
     test_element();
 
