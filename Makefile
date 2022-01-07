@@ -1,3 +1,7 @@
+# Gabriele Canesi
+# Matricola 851637
+
+
 main: main.o sparse_matrix_exceptions.o test_class.o
 	g++ main.o sparse_matrix_exceptions.o test_class.o -o main --std=c++0x
 

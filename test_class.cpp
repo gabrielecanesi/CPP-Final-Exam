@@ -1,3 +1,6 @@
+// Gabriele Canesi
+// Matricola 851637
+
 /**
  * @file test_class.cpp
  * @author Gabriele Canesi
@@ -41,7 +44,7 @@ int test_class::value() const {
 }
 
 
-std::ostream& operator<<(std::ostream& stream, const test_class& test_instance){
+std::ostream& operator<<(std::ostream& stream, const test_class &test_instance){
     stream << test_instance.value();
     return stream;
 }

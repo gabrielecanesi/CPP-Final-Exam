@@ -1,3 +1,6 @@
+// Gabriele Canesi
+// Matricola 851637
+
 /**
  * @file sparse_matrix_exceptions.cpp
  * @author Gabriele Canesi

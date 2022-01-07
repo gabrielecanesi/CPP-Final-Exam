@@ -1,3 +1,6 @@
+// Gabriele Canesi
+// Matricola 851637
+
 /**
  *
  * @file SparseMatrix.h
@@ -15,8 +18,11 @@
 
 /**
  *
- * @brief Matrice sparsa. Questa classe permette di memorizzare i dati in una matrice, in posizioni scelte dall'utente.
- * La dimensione della matrice è scelta a runtime.
+ * @brief Classe che implementa una matrice sparsa.
+ *
+ * Questa classe permette di rappresentare delle matrici sparse minimizzando il quantitativo di memoria utilizzato.
+ * Quando una cella della memoria è virtualmente vuota, viene ritornato un valore di default precedentemente passato al
+ * costruttore. Nel costruttore di defaulr, questo valore corrisponde al valore di default del tipo generico.
  * */
 
 
@@ -30,30 +36,24 @@ private:
     struct node;
 public:
 
+    /**
+     * @typedef size_type
+     * @brief Un wrapper per mascherare il vero tipo di dati che rappresenta la dimensione della matrice
+     */
     typedef long size_type;
 
     /**
-     * @brief Struttura che contiene i dati relativi a un elemento: riga, colonna e valore effettivo.\n
-     * Viene ritornata dal const_iterator.
+     * @brief Classe che contiene le informazioni sui valori inseriti nella SparseMatrix.
      */
     class element{
         // Faccio in modo che SparseMatrix sia in grado di accedere agli attributi privati di element
         friend class SparseMatrix;
 
-        /**
-         * @brief Il dato effettivo
-         */
-        T m_value;
+        T m_value; ///< Il valore effettivo
 
-        /**
-         * @brief Riga in cui si trova il dato
-         */
-        size_type m_i;
+        size_type m_i; ///< Il valore della riga in cui si trova l'elemento
 
-        /**
-         * @brief Colonna in cui si trova il dato
-         */
-        size_type m_j;
+        size_type m_j; ///< Il valore della colonna in cui si trova l'elemento
 
 
 
@@ -85,7 +85,7 @@ public:
 
 
         /**
-         * @brief costruttore di copia
+         * Costruttore di copia
          * @param other l'elemento da copiare
          */
         element(const element &other) : m_value(other.m_value), m_j(other.m_j), m_i(other.m_i) {}
@@ -144,14 +144,11 @@ public:
         }
     };
 
-    /**
-     * @typedef size_type
-     * @brief Un wrapper per mascherare il vero tipo di dati che rappresenta la dimensione della matrice
-     */
+
 
 
     /**
-     * @brief Costruttore di default. Istanzia una matrice vuota e ha come dato di default il risultato del costruttore
+     * @brief Costruttore di default. Istanzia una matrice vuota e ha come dato di default il valore
      * di default del tipo T.
      *
      * @post m_rows == 0
@@ -163,7 +160,8 @@ public:
 
 
     /**
-     * @brief Costruttore che prende in input la dimensione della matrice e il valore di default.\n
+     * @brief Costruttore che prende in input la dimensione della matrice e il valore di default.
+     *
      * Per assicurare la coerenza con il numero di elementi inseriti, il numero totale di possibili elementi non può
      * superare il valore massimo di size_type.
      * @param n numero di righe
@@ -197,9 +195,7 @@ public:
                                               m_inserted_elements(0) {
         node* temp = other.m_data;
 
-        /* Dal momento che set chiamerà una new, devo gestire eventuali errori
-        *  per riportare l'oggetto a uno stato coerente nel caso la copia non dovesse terminare correttamente.
-        */
+        // Devo catturare eventuali eccezioni per riportare la matrice allo stato precedente (distruggerla)
         try{
             while (temp != nullptr){
                 set(temp->data.m_i, temp->data.m_j, temp->data.m_value);
@@ -313,7 +309,9 @@ public:
     }
 
     /**
-     * @brief classe che implementa un const forward iterator per gli alementi della classe SparseMatrix. Ritorna oggetti di tipo element
+     * @brief Forward const_iterator per SparseMatrix.
+     *
+     * Questo iteratore visita gli elementi in ordine di inserimento, passando prima dagli elementi inseriti per ultimi.
      */
     class const_iterator {
     public:
@@ -337,6 +335,10 @@ public:
             ptr = other.ptr;
         }
 
+        /**
+         * @param other l'iteratore da copiare
+         * @return reference al nuovo stato dell'iteratore
+         */
         const_iterator& operator=(const const_iterator &other) {
             if(this != &other){
                 ptr = other.ptr;
@@ -344,7 +346,15 @@ public:
             return *this;
         }
 
+
+        /**
+         * @brief Distruttore
+         *
+         * È vuoto perchè il ciclo di vita del nodo dipende da SparseMatrix.
+         */
         ~const_iterator() {}
+
+
 
 
         /**
@@ -429,26 +439,54 @@ public:
 
 private:
 
-    // Struttura che implementa il nodo della lista.
+
+    /**
+     * @brief Struttura che rappresenta un elemento fisico della SparseMatrix.
+     *
+     * Questa struttura è parte della lista concatenata
+     */
     struct node{
 
-        element data;
-        node *next;
+        element data; ///< Informazioni sull'elemento inserito priva di puntatori interni alla SparseMatrix
+        node *next; ///< Puntatore al nodo successivo
 
-        // Costruttore di default
+
+        /**
+         * @brief Costruttore di default
+         *
+         * @post next == nullptr
+         */
         node() : next(nullptr){}
 
-        // Costruttore di copia
+
+        /**
+         * @brief Costruttore di copia
+         *
+         * Questo costruttore non copia tutti gli elementi della lista, ma copia solo il valore del puntatore successivo.
+         *
+         * @param other il nodo da copiare
+         */
         node(const node &other) : data(other.data), next(other.next) {}
 
-        // Costruttore che prende in input gli indici e il dato da inserire.
+        /**
+         *
+         * @param i La riga dell'elemento
+         * @param j La colonna dell'elemento
+         * @param data il valore effettivo
+         */
         node(size_type i, size_type j, const T &data) : data(element(i, j, data)), next(nullptr){}
 
-        // Distruttore. è vuoto perchè la distruzione dei nodi viene gestita dalla classe SparseMatrix e
-        // la classe non è accessibile dall'esterno
+        /**
+         * @brief Distruttore
+         *
+         */
         ~node(){}
 
-        // Operatore di assegnamento.
+        /**
+         *
+         * @param other il nodo da copiare
+         * @return reference al nuovo stato del nodo.
+         */
         node& operator=(const node &other){
             if (this != &other){
                 data = other.data;
@@ -459,20 +497,22 @@ private:
     };
 
 
-    // La matrice vera e propria
-    node *m_data;
+    node *m_data; ///< Puntatore alla testa della lista di nodi
 
-    // Gli attributi che memorizzano larghezza e altezza della matrice
-    size_type m_rows;
-    size_type m_columns;
+    size_type m_rows; ///< Numero di righe logiche della matrice
+    size_type m_columns; ///< Numero di colonne logiche della matrice
 
-    size_type m_inserted_elements;
+    size_type m_inserted_elements; ///< Numero di elementi fisicamente inseriti nella matrice
 
-    // Il valore di default nel caso venga richiesta una cella vuota
-    T m_default;
+    T m_default; ///< Valore di default
 
-    // Funzione di appoggio che cerca il puntatore a un elemento con indici (i, j) e lo ritorna se
-    // esiste, nullptr altrimenti
+
+    /**
+     * @brief funzione di appoggio per cercare un nodo partendo dalle coordinate.
+     * @param i La riga da cercare
+     * @param j La colonna da cercare
+     * @return Il puntatore al nodo che contiene l'elemento (i, j) se esiste, nullptr altrimenti.
+     */
     node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
         while (temp != nullptr && (temp->data.m_i != i || temp->data.m_j != j)){
@@ -481,6 +521,11 @@ private:
         return temp;
     }
 
+    /**
+     * @brief funzione di appoggio per il distruttore
+     *
+     * Si occupa di distruggere tutti i nodi della matrice e di resettare i valori dei vari attributi.
+     */
     void destroy_matrix(){
         node* it = m_data;
         while (it != nullptr){
@@ -501,6 +546,10 @@ private:
 
 
 /**
+ * @brief Funzione che testa un predicato sugli elementi di una SparseMatrix.
+ *
+ * Questa funzione conta tutti gli elementi logici di una SparseMatrix generica che soddisfano un predicato generico
+ * passato come argomento.
  *
  * @tparam T il tipo di dato della matrice
  * @tparam Pred il tipo del funtore
@@ -511,8 +560,8 @@ private:
 template<typename T, typename Pred>
 typename SparseMatrix<T>::size_type evaluate(const SparseMatrix<T> &M, Pred P){
     typename SparseMatrix<T>::size_type  result = 0;
-    typename SparseMatrix<T>::const_iterator begin, end;
-    for(begin = M.begin(), end = M.end(); begin != end; ++begin){
+    typename SparseMatrix<T>::const_iterator begin;
+    for(begin = M.begin(); begin != M.end(); ++begin){
         if(P(begin->value())){
             ++result;
         }
@@ -540,4 +589,4 @@ std::ostream& operator<<(std::ostream &stream, const SparseMatrix<T> &mat){
     return stream;
 }
 
-#endif // SPARSE_MATRIX_H
+#endif
