@@ -27,7 +27,7 @@ void FindDialog::on_buttonClose_clicked(){
     this->close();
 }
 
-// Azzera il testo quando viene chiusa
+
 void FindDialog::on_FindDialog_rejected(){
     ui->labelNotFound->setText("");
 }
@@ -48,13 +48,8 @@ void FindDialog::on_searchLine_returnPressed(){
     emit search(ui->searchLine->text(), ui->checkBox->isChecked());
 }
 
-void FindDialog::keyPressEvent(QKeyEvent* e) {
+void FindDialog::keyPressEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key::Key_Escape){
         reject();
-    }
-    else if (e->key() == Qt::Key::Key_Enter){
-        if(!ui->searchLine->hasFocus()){
-            emit search(ui->searchLine->text(), ui->checkBox->isChecked());
-        }
     }
 }

@@ -32,6 +32,8 @@ MainWindow::~MainWindow()
     // Dealloca i vari dialog allocati
     delete findDialog;
 
+    ui = nullptr;
+    findDialog = nullptr;
     // Imposto i dati sulla ricerca ai valori di partenza
     textLength = 0;
     matchCase = false;
@@ -45,9 +47,6 @@ void MainWindow::searchStart(){
     // Istanzia gli oggetti che formattano il testo e imposta lo stile
     QTextCharFormat format;
     QTextCursor cursor(ui->textEditor->document());
-    QTextCursor plainCursor(ui->textEditor->document());
-
-    plainCursor.beginEditBlock();
     QTextDocument::FindFlag flag = matchCase ? QTextDocument::FindWholeWords : QTextDocument::FindFlag();
     format.setBackground(Qt::yellow);
     format.setForeground(Qt::black);
@@ -60,7 +59,6 @@ void MainWindow::searchStart(){
         cursor.setCharFormat(format);
         cursor = ui->textEditor->document()->find(query, cursor, flag);
     }
-    plainCursor.endEditBlock();
 
     emit searchEnd(found);
 

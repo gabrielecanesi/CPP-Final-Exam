@@ -27,6 +27,7 @@ signals:
 
 
 private slots:
+
     void on_buttonClose_clicked();
 
     void on_FindDialog_rejected();
@@ -41,11 +42,20 @@ private slots:
 
 
 
+
+    /**
+     * @brief Slot per triggerare l'avvio della ricerca tramite invio nel lineEdit
+     */
     void on_searchLine_returnPressed();
 
 private:
     Ui::FindDialog *ui;
     void showEvent(QShowEvent* event);
+
+    /**
+     * @brief Gestione della pressione del taso esc per chiudere il dialog
+     * @param e l'evento
+     */
     void keyPressEvent(QKeyEvent* e);
 };
 

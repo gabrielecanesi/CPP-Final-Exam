@@ -46,13 +46,30 @@ private slots:
     void on_textEditor_textChanged();
 
 private:
-    FindDialog *findDialog;
+    FindDialog *findDialog; ///< Puntatore alla dialog di ricerca
     Ui::MainWindow *ui;
-    QString openFileName;
-    QString query;
+    QString openFileName; ///< Percorso del file attualmente aperto
+    QString query; ///< Query di ricerca corrente
     bool matchCase;
+
+    /**
+     * @brief Lunghezza del testo. utile per l'esecuzione della ricerca solo se
+     * il testo è stato modificato e non evidenziato.
+     */
     long textLength;
+
+    /**
+     * @brief searchReset
+     */
+
+    /**
+     * @brief funzione di appoggio che inizia la ricerca
+     */
     void searchReset();
+
+    /**
+     * @brief funzione di appoggio che elimina i risultati di ricerca
+     */
     void searchStart();
 };
 #endif // MAINWINDOW_H
