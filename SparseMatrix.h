@@ -515,7 +515,7 @@ private:
      */
     node* get_node(size_type i, size_type j) const {
         node* temp = m_data;
-        while (temp != nullptr && (temp->data.m_i != i || temp->data.m_j != j)){
+        while (temp != nullptr && (temp->data.row() != i || temp->data.column() != j)){
             temp = temp->next;
         }
         return temp;

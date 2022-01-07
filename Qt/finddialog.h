@@ -18,8 +18,12 @@ public:
 
 signals:
 
-    // Segnale custom per mattere in comunicazione FindDialog e MainWindow
-void search(const QString& query, bool matchCase);
+    /**
+     * @brief segnale custom per la ricerca
+     * @param query la stringa da cercare
+     * @param matchCase true se deve considerare solo il case esatto della query
+     */
+    void search(const QString& query, bool matchCase);
 
 
 private slots:
@@ -29,7 +33,10 @@ private slots:
 
     void on_buttonFind_clicked();
 
-    // Slot custom per verificare il risultato della ricerca
+    /**
+     * @brief slot custom che esamina l'esito della ricerca
+     * @param result true se non sono state trovate occorren
+     */
     void on_searchEnd(bool result);
 
 

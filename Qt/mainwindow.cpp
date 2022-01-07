@@ -39,44 +39,29 @@ MainWindow::~MainWindow()
 
 
 void MainWindow::searchStart(){
-
-    // Trasforma le stringhe da comparare in lowercase se matchCase è true
-    QString str;
-    QString query_temp = query;
-    if(matchCase){
-        str = ui->textEditor->toPlainText();
-    }
-    else {
-        str = ui->textEditor->toPlainText().toLower();
-        query_temp = query.toLower();
-    }
-
     // Rimuove gli highlights della ricerca precedente
     searchReset();
 
     // Istanzia gli oggetti che formattano il testo e imposta lo stile
     QTextCharFormat format;
     QTextCursor cursor(ui->textEditor->document());
+    QTextCursor plainCursor(ui->textEditor->document());
+
+    plainCursor.beginEditBlock();
+    QTextDocument::FindFlag flag = matchCase ? QTextDocument::FindWholeWords : QTextDocument::FindFlag();
     format.setBackground(Qt::yellow);
     format.setForeground(Qt::black);
-
+    cursor = ui->textEditor->document()->find(query, cursor, flag);
 
     bool found = false;
-    // Cerca le occorrenze
-    for(int i = 0; i < str.size() - query.size() + 1; ++i){
-        int count = 0;
-        for (; count < query_temp.size() && str[i + count] == query_temp[count]; ++count){}
-        if(count == query_temp.size()){
-            // imposta il range del cursore e evidenzia il testo in quell'intervallo
-            cursor.setPosition(i, QTextCursor::MoveAnchor);
-            cursor.setPosition(count + i, QTextCursor::KeepAnchor);
-            cursor.setCharFormat(format);
-            found = true;
-        }
+    while (!cursor.isNull()) {
+        found = true;
+        cursor.movePosition(QTextCursor::NextCell, QTextCursor::KeepAnchor);
+        cursor.setCharFormat(format);
+        cursor = ui->textEditor->document()->find(query, cursor, flag);
     }
+    plainCursor.endEditBlock();
 
-
-    // Emette il segnale per notificare la fine della ricerca a chi è in ascolto (Il FindDialog in questo caso)
     emit searchEnd(found);
 
 }

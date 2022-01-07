@@ -32,10 +32,17 @@ private slots:
 
     void on_actionNew_triggered();
 
-    // Slot custom per ricevere i dati con cui effettuare la ricerca nel testo
+    /**
+     * @brief Slot custom che esegue una ricerca del testo proveniente da un altro segnale.
+     * @param query la stringa da cercare
+     * @param matchCase true se deve confrontare il case esatto, false altrimenti
+     */
     void on_searchRequest(const QString& query, bool matchCase);
 
 
+    /**
+     * @brief handler per il change del test dell'editor
+     */
     void on_textEditor_textChanged();
 
 private:
