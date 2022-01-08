@@ -47,7 +47,8 @@ void MainWindow::searchStart(){
     // Istanzia gli oggetti che formattano il testo e imposta lo stile
     QTextCharFormat format;
     QTextCursor cursor(ui->textEditor->document());
-    QTextDocument::FindFlag flag = matchCase ? QTextDocument::FindWholeWords : QTextDocument::FindFlag();
+    // Se matchCase è true, allora filtra solo i match con le stesse maiuscole/minuscole
+    QTextDocument::FindFlag flag = matchCase ? QTextDocument::FindCaseSensitively : QTextDocument::FindFlag();
     format.setBackground(Qt::yellow);
     format.setForeground(Qt::black);
     cursor = ui->textEditor->document()->find(query, cursor, flag);
