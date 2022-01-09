@@ -49,7 +49,15 @@ private:
     FindDialog *findDialog; ///< Puntatore alla dialog di ricerca
     Ui::MainWindow *ui;
     QString openFileName; ///< Percorso del file attualmente aperto
-    QString query; ///< Query di ricerca corrente
+
+    /**
+     * @brief Query di ricerca corrente
+     *
+     * Quando la dialog genera un segnale di ricerca, la query viene copiata in questa variaible,
+     * mentre quando viene chiusa, viene resettata. Questo per fare in modo che i risultati della
+     * ricerca vengano cancellati dalla window al momento della chiusura della dialog.
+     */
+    QString query; ///<
     bool matchCase;
 
     /**
