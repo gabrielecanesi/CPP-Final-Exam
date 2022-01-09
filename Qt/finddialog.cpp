@@ -30,6 +30,7 @@ void FindDialog::on_buttonClose_clicked(){
 
 void FindDialog::on_FindDialog_rejected(){
     ui->labelNotFound->setText("");
+    emit search("", false);
 }
 
 
@@ -40,6 +41,7 @@ void FindDialog::on_buttonFind_clicked(){
 void FindDialog::showEvent(QShowEvent*){
     ui->searchLine->setFocus();
     ui->searchLine->selectAll();
+    ui->labelNotFound->setText("");
 }
 
 
